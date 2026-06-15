@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is our Prisma schema file,
 
 generator client {
   provider = "prisma-client-js"
@@ -10,9 +9,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─────────────────────────────────────────────
+
 // Enums
-// ─────────────────────────────────────────────
+
 
 enum Role {
   ATTENDEE
@@ -55,9 +54,9 @@ enum PaymentStatus {
   REFUNDED
 }
 
-// ─────────────────────────────────────────────
+
 // Models
-// ─────────────────────────────────────────────
+
 
 model User {
   id             String   @id @default(cuid())
