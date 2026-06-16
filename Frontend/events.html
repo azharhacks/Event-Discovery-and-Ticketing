@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explore Events — Mombasa Tickets</title>
+  <meta name="description" content="Explore all events in Mombasa. Filter by date, category, price and location to find exactly what you're looking for.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">
+        <img src="images/hafla-logo.png" alt="Hafla" class="nav-logo-img">
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Events</a>
+        <a href="#" class="nav-link">Organizers</a>
+        <a href="#" class="nav-link">Help</a>
+      </div>
+
+      <div class="nav-search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="nav-search-input" type="text" placeholder="Search events..." 
+               onkeydown="if(event.key==='Enter') location.href='events.html?q='+this.value">
+      </div>
+
+      <div class="nav-actions" id="nav-auth">
+        <a href="login.html" class="btn btn-dark btn-sm">Login / Sign Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ PAGE HERO ═══ -->
+  <div class="events-page-hero">
+    <div class="container">
+      <h1>Explore Mombasa Events</h1>
+      <p>Showing <strong id="result-count" style="color:#fff">—</strong> events available in your selected area</p>
+    </div>
+  </div>
+
+  <!-- ═══ MAIN LAYOUT ═══ -->
+  <div class="container">
+    <div class="events-layout">
+
+      <!-- ── SIDEBAR FILTERS ── -->
+      <aside class="filters-sidebar">
+        <div class="filters-title">Filters</div>
+
+        <!-- Date -->
+        <div class="filter-group">
+          <div class="filter-label">Date</div>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="date" value="all" checked> All Dates
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="date" value="today"> Today
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="date" value="weekend"> This Weekend
+            </label>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="filter-group">
+          <div class="filter-label">Category</div>
+          <select class="filter-select" id="cat-filter">
+            <option value="">All Categories</option>
+            <option value="Music">Music</option>
+            <option value="Food">Food</option>
+            <option value="Sports">Sports</option>
+            <option value="Culture">Culture</option>
+            <option value="Tech">Tech</option>
+            <option value="Nightlife">Nightlife</option>
+          </select>
+        </div>
+
+        <!-- Price Range -->
+        <div class="filter-group">
+          <div class="filter-label">Price Range (KES)</div>
+          <div class="price-inputs">
+            <input class="price-input" id="min-price" type="number" placeholder="Min" min="0">
+            <span class="price-dash">—</span>
+            <input class="price-input" id="max-price" type="number" placeholder="Max" min="0">
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="filter-group">
+          <div class="filter-label">Location</div>
+          <div class="check-group">
+            <label class="check-item">
+              <input type="checkbox" name="location" value="Nyali"> Nyali
+            </label>
+            <label class="check-item">
+              <input type="checkbox" name="location" value="Bamburi"> Bamburi
+            </label>
+            <label class="check-item">
+              <input type="checkbox" name="location" value="Old Town"> Old Town
+            </label>
+            <label class="check-item">
+              <input type="checkbox" name="location" value="Mtwapa"> Mtwapa
+            </label>
+          </div>
+        </div>
+
+        <button class="reset-btn" id="reset-filters">Reset Filters</button>
+      </aside>
+
+      <!-- ── MAIN CONTENT ── -->
+      <main class="events-main">
+        <!-- Toolbar -->
+        <div class="events-toolbar">
+          <p class="results-count">
+            <strong id="result-count-main">—</strong> events found
+          </p>
+          <div class="sort-wrap">
+            <span>Sort by:</span>
+            <select class="filter-select" id="sort-select" style="width:auto;padding:7px 28px 7px 10px">
+              <option value="latest">Latest</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Events Grid -->
+        <div class="events-grid-2" id="events-grid">
+          <!-- JS rendered with skeletons initially -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo">
+            <img src="images/hafla-logo.png" alt="Hafla" class="nav-logo-img nav-logo-img--footer">
+          </a>
+          <p>Mombasa's leading event discovery and ticketing platform. From beach parties to cultural tours, find what's happening near you.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Locations</h4>
+          <ul>
+            <li><a href="#">Nyali</a></li>
+            <li><a href="#">Bamburi</a></li>
+            <li><a href="#">Old Town</a></li>
+            <li><a href="#">Mtwapa</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Newsletter</h4>
+          <p style="font-size:13px;margin-bottom:12px">Get the latest events in your inbox</p>
+          <div style="display:flex;gap:8px">
+            <input type="email" placeholder="Email" 
+                   style="flex:1;padding:9px 12px;border:1px solid rgba(255,255,255,0.2);border-radius:6px;background:rgba(255,255,255,0.1);color:#fff;font-size:13px;outline:none">
+            <button class="btn btn-primary btn-sm">Join</button>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 Mombasa Tickets. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- sync result count to both elements -->
+  <script>
+    const obs = new MutationObserver(() => {
+      const a = document.getElementById('result-count');
+      const b = document.getElementById('result-count-main');
+      if (a && b) b.textContent = a.textContent;
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+      const el = document.getElementById('result-count');
+      if (el) obs.observe(el, { childList: true, subtree: true, characterData: true });
+    });
+  </script>
+  <script type="module" src="js/events.js"></script>
+</body>
+</html>
