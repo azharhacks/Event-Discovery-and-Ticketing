@@ -8,6 +8,7 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   TICKETS:   '/tickets',
   PROFILE:   '/profile',
+  CHECKOUT:  '/checkout',
 
   ORGANIZER:         '/organizer',
   ORGANIZER_EVENTS:  '/organizer/events',

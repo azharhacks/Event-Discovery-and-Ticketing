@@ -7,6 +7,11 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const eventRoutes = require('./routes/event.routes');
 const mpesaRoutes = require('./routes/mpesa.routes');
+const categoryRoutes = require('./routes/category.routes');
+const orderRoutes = require('./routes/order.routes');
+const ticketRoutes = require('./routes/ticket.routes');
+const userRoutes = require('./routes/user.routes');
+const { seedCategories } = require('./utils/seed');
 
 const app = express();
 
@@ -19,6 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/mpesa', mpesaRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/tickets', ticketRoutes);
+app.use('/api/users', userRoutes);
 
 // Health check
 app.get('/', (req, res) => {
@@ -42,8 +51,9 @@ app.use((err, req, res, next) => {
 //start server
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`✅  Server running on port ${PORT}`);
+  await seedCategories();
 });
 
 module.exports = app;

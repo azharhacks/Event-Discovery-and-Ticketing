@@ -13,6 +13,7 @@ export default function Navbar() {
     .split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
   const firstName    = user?.fullName?.split(' ')[0] || 'User';
   const isOrganizer  = user?.role === 'ORGANIZER';
+  const isAdmin      = user?.role === 'ADMIN';
 
   const handleSearch = (e) => {
     if (e.key === 'Enter' && searchVal.trim()) {
@@ -68,16 +69,30 @@ export default function Navbar() {
                     <div>
                       <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--text)' }}>{user?.fullName}</div>
                       <div style={{ fontSize: 12, color: 'var(--muted)' }}>{user?.email}</div>
-                      <span className="nav-role-badge">{isOrganizer ? '🎪 Organizer' : '🎟 Attendee'}</span>
+                      <span className="nav-role-badge">
+                        {user?.role === 'ADMIN' ? 'Admin' : isOrganizer ? 'Organizer' : 'Attendee'}
+                      </span>
                     </div>
                   </div>
                   <div className="nav-dropdown-divider" />
-                  <Link to={ROUTES.TICKETS} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                    My Tickets
-                  </Link>
+                  {user?.role === 'ATTENDEE' && (
+                    <Link to={ROUTES.TICKETS} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      My Tickets
+                    </Link>
+                  )}
                   {isOrganizer && (
-                    <Link to={ROUTES.ORGANIZER_EVENTS} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                      My Events
+                    <>
+                      <Link to={ROUTES.ORGANIZER} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                        Organizer Dashboard
+                      </Link>
+                      <Link to={ROUTES.ORGANIZER_CREATE} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                        Create Event
+                      </Link>
+                    </>
+                  )}
+                  {isAdmin && (
+                    <Link to={ROUTES.ADMIN} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      Admin Dashboard
                     </Link>
                   )}
                   <Link to={ROUTES.PROFILE} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>

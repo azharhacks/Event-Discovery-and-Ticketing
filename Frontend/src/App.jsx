@@ -1,18 +1,30 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { ToastProvider } from './context/ToastContext';
-import ToastStack from './components/ui/Toast';
+﻿import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { ToastProvider } from "./context/ToastContext";
+import ToastStack from "./components/ui/Toast";
 
-import HomePage        from './pages/public/HomePage';
-import EventsPage      from './pages/public/EventsPage';
-import EventDetailPage from './pages/public/EventDetailPage';
-import LoginPage       from './pages/auth/LoginPage';
-import SignupPage      from './pages/auth/SignupPage';
+// Public pages
+import HomePage        from "./pages/public/HomePage";
+import EventsPage      from "./pages/public/EventsPage";
+import EventDetailPage from "./pages/public/EventDetailPage";
+import LoginPage       from "./pages/auth/LoginPage";
+import SignupPage      from "./pages/auth/SignupPage";
 
-import ProtectedRoute from './guards/ProtectedRoute';
-import RoleRoute      from './guards/RoleRoute';
+// Attendee / shared protected pages
+import CheckoutPage  from "./pages/attendee/CheckoutPage";
+import MyTicketsPage from "./pages/attendee/MyTicketsPage";
+import ProfilePage   from "./pages/attendee/ProfilePage";
 
-import { ROUTES } from './config/routes';
+// Organizer pages
+import OrganizerDashboard from "./pages/organizer/OrganizerDashboard";
+import CreateEventPage    from "./pages/organizer/CreateEventPage";
+
+// Admin pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+
+import ProtectedRoute from "./guards/ProtectedRoute";
+import RoleRoute      from "./guards/RoleRoute";
+import { ROUTES } from "./config/routes";
 
 export default function App() {
   return (
@@ -20,36 +32,41 @@ export default function App() {
       <AuthProvider>
         <ToastProvider>
           <Routes>
-            {/* Public */}
+            {/* ── Public ─────────────────────────────── */}
             <Route path={ROUTES.HOME}   element={<HomePage />} />
             <Route path={ROUTES.EVENTS} element={<EventsPage />} />
             <Route path="/events/:id"   element={<EventDetailPage />} />
             <Route path={ROUTES.LOGIN}  element={<LoginPage />} />
             <Route path={ROUTES.SIGNUP} element={<SignupPage />} />
 
-            {/* Protected — Attendee */}
+            {/* ── Any logged-in user ─────────────────── */}
             <Route element={<ProtectedRoute />}>
-              <Route element={<RoleRoute roles={['ATTENDEE']} />}>
-                <Route path={ROUTES.DASHBOARD} element={<div style={{padding:60,textAlign:'center'}}><h2>Attendee Dashboard</h2><p>Coming soon</p></div>} />
-                <Route path={ROUTES.TICKETS}   element={<div style={{padding:60,textAlign:'center'}}><h2>My Tickets</h2><p>Coming soon</p></div>} />
+              <Route path={ROUTES.PROFILE}  element={<ProfilePage />} />
+              <Route path={ROUTES.CHECKOUT} element={<CheckoutPage />} />
+            </Route>
+
+            {/* ── Attendee only ──────────────────────── */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<RoleRoute roles={["ATTENDEE"]} />}>
+                <Route path={ROUTES.TICKETS} element={<MyTicketsPage />} />
               </Route>
             </Route>
 
-            {/* Protected — Organizer */}
+            {/* ── Organizer only ─────────────────────── */}
             <Route element={<ProtectedRoute />}>
-              <Route element={<RoleRoute roles={['ORGANIZER']} />}>
-                <Route path={ROUTES.ORGANIZER}        element={<div style={{padding:60,textAlign:'center'}}><h2>Organizer Dashboard</h2><p>Coming soon</p></div>} />
-                <Route path={ROUTES.ORGANIZER_EVENTS} element={<div style={{padding:60,textAlign:'center'}}><h2>My Events</h2><p>Coming soon</p></div>} />
-                <Route path={ROUTES.ORGANIZER_CREATE} element={<div style={{padding:60,textAlign:'center'}}><h2>Create Event</h2><p>Coming soon</p></div>} />
+              <Route element={<RoleRoute roles={["ORGANIZER"]} />}>
+                <Route path={ROUTES.ORGANIZER}        element={<OrganizerDashboard />} />
+                <Route path={ROUTES.ORGANIZER_EVENTS} element={<OrganizerDashboard />} />
+                <Route path={ROUTES.ORGANIZER_CREATE} element={<CreateEventPage />} />
               </Route>
             </Route>
 
-            {/* Protected — Admin */}
+            {/* ── Admin only ─────────────────────────── */}
             <Route element={<ProtectedRoute />}>
-              <Route element={<RoleRoute roles={['ADMIN']} />}>
-                <Route path={ROUTES.ADMIN}       element={<div style={{padding:60,textAlign:'center'}}><h2>Admin Dashboard</h2><p>Coming soon</p></div>} />
-                <Route path={ROUTES.ADMIN_EVENTS} element={<div style={{padding:60,textAlign:'center'}}><h2>Manage Events</h2><p>Coming soon</p></div>} />
-                <Route path={ROUTES.ADMIN_USERS}  element={<div style={{padding:60,textAlign:'center'}}><h2>Manage Users</h2><p>Coming soon</p></div>} />
+              <Route element={<RoleRoute roles={["ADMIN"]} />}>
+                <Route path={ROUTES.ADMIN}        element={<AdminDashboard />} />
+                <Route path={ROUTES.ADMIN_EVENTS} element={<AdminDashboard />} />
+                <Route path={ROUTES.ADMIN_USERS}  element={<AdminDashboard />} />
               </Route>
             </Route>
 
