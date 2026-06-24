@@ -11,13 +11,16 @@ import LoginPage       from "./pages/auth/LoginPage";
 import SignupPage      from "./pages/auth/SignupPage";
 
 // Attendee / shared protected pages
-import CheckoutPage  from "./pages/attendee/CheckoutPage";
-import MyTicketsPage from "./pages/attendee/MyTicketsPage";
-import ProfilePage   from "./pages/attendee/ProfilePage";
+import AttendeeDashboard from "./pages/attendee/AttendeeDashboard";
+import CheckoutPage      from "./pages/attendee/CheckoutPage";
+import MyTicketsPage     from "./pages/attendee/MyTicketsPage";
+import ProfilePage       from "./pages/attendee/ProfilePage";
 
 // Organizer pages
-import OrganizerDashboard from "./pages/organizer/OrganizerDashboard";
-import CreateEventPage    from "./pages/organizer/CreateEventPage";
+import OrganizerDashboard  from "./pages/organizer/OrganizerDashboard";
+import CreateEventPage      from "./pages/organizer/CreateEventPage";
+import EditEventPage        from "./pages/organizer/EditEventPage";
+import EventAttendeesPage  from "./pages/organizer/EventAttendeesPage";
 
 // Admin pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -48,7 +51,8 @@ export default function App() {
             {/* ── Attendee only ──────────────────────── */}
             <Route element={<ProtectedRoute />}>
               <Route element={<RoleRoute roles={["ATTENDEE"]} />}>
-                <Route path={ROUTES.TICKETS} element={<MyTicketsPage />} />
+                <Route path={ROUTES.DASHBOARD} element={<AttendeeDashboard />} />
+                <Route path={ROUTES.TICKETS}   element={<MyTicketsPage />} />
               </Route>
             </Route>
 
@@ -58,6 +62,8 @@ export default function App() {
                 <Route path={ROUTES.ORGANIZER}        element={<OrganizerDashboard />} />
                 <Route path={ROUTES.ORGANIZER_EVENTS} element={<OrganizerDashboard />} />
                 <Route path={ROUTES.ORGANIZER_CREATE} element={<CreateEventPage />} />
+                <Route path="/organizer/events/:id/edit"       element={<EditEventPage />} />
+                <Route path="/organizer/events/:id/attendees"  element={<EventAttendeesPage />} />
               </Route>
             </Route>
 

@@ -5,6 +5,11 @@ import Footer from "../../components/layout/Footer";
 import { getOrganizerEvents, verifyTicket } from "../../lib/api";
 import { ROUTES } from "../../config/routes";
 
+const btnSm = (bg, color) => ({
+  padding: "4px 10px", borderRadius: 6, border: "none", background: bg, color,
+  cursor: "pointer", fontWeight: 600, fontSize: 11, fontFamily: "inherit",
+});
+
 const STATUS_STYLES = {
   APPROVED:  { bg: "#ecfdf5", color: "#047857", border: "#a7f3d0" },
   PENDING:   { bg: "#fffbeb", color: "#b45309", border: "#fde68a" },
@@ -107,7 +112,7 @@ export default function OrganizerDashboard() {
               ) : events.map((ev) => {
                 const ss = STATUS_STYLES[ev.status] || STATUS_STYLES.CANCELLED;
                 return (
-                  <div key={ev.id} style={{ padding: "14px 24px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", gap: 16 }}>
+                  <div key={ev.id} style={{ padding: "14px 24px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: 14, color: "#0f172a", marginBottom: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{ev.title}</div>
                       <div style={{ fontSize: 12, color: "#64748b" }}>{fmtDate(ev.eventDate)} · {ev.venue}</div>
@@ -115,9 +120,17 @@ export default function OrganizerDashboard() {
                     <span style={{ display: "inline-flex", padding: "4px 10px", borderRadius: 9999, fontSize: 11, fontWeight: 700, background: ss.bg, color: ss.color, border: `1px solid ${ss.border}`, whiteSpace: "nowrap" }}>
                       {ev.status}
                     </span>
-                    <div style={{ textAlign: "right", minWidth: 90 }}>
+                    <div style={{ textAlign: "right", minWidth: 80 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb" }}>{fmtPrice(ev.ticketPrice)}</div>
                       <div style={{ fontSize: 11, color: "#94a3b8" }}>Cap: {ev.capacity}</div>
+                    </div>
+                    <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                      <button onClick={() => navigate(ROUTES.ORGANIZER_EDIT(ev.id))} style={btnSm("#eff6ff", "#2563eb")}>
+                        Edit
+                      </button>
+                      <button onClick={() => navigate(ROUTES.ORGANIZER_ATTENDEES(ev.id))} style={btnSm("#f0fdf4", "#16a34a")}>
+                        Attendees
+                      </button>
                     </div>
                   </div>
                 );

@@ -260,12 +260,111 @@ const getOrganizerEvents = async (req, res) => {
   }
 };
 
+// Organizer only: edit own event (resets to PENDING if it was APPROVED)
+const updateEvent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const organiserId = req.user.id;
+    const { categoryId, title, description, venue, eventDate, eventTime, ticketPrice, capacity, bannerUrl } = req.body;
+
+    if (!title || !description || !venue || !eventDate || !eventTime || ticketPrice == null || !capacity) {
+      return res.status(400).json({ success: false, message: 'All required fields must be provided.' });
+    }
+
+    const event = await prisma.event.findUnique({
+      where: { id },
+      include: { tickets: { select: { id: true, quantityAvailable: true } } },
+    });
+
+    if (!event) return res.status(404).json({ success: false, message: 'Event not found.' });
+    if (event.organiserId !== organiserId) return res.status(403).json({ success: false, message: 'Access denied.' });
+    if (['CANCELLED', 'COMPLETED'].includes(event.status)) {
+      return res.status(400).json({ success: false, message: 'Cannot edit a cancelled or completed event.' });
+    }
+
+    const wasApproved = event.status === 'APPROVED';
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const updatedEvent = await tx.event.update({
+        where: { id },
+        data: {
+          categoryId: categoryId || event.categoryId,
+          title,
+          description,
+          venue,
+          eventDate: new Date(eventDate),
+          eventTime,
+          ticketPrice: parseFloat(ticketPrice),
+          capacity: parseInt(capacity, 10),
+          bannerUrl: bannerUrl || null,
+          status: wasApproved ? 'PENDING' : event.status,
+        },
+        include: { category: { select: { id: true, name: true } } },
+      });
+
+      if (event.tickets.length > 0) {
+        const ticket = event.tickets[0];
+        const sold = event.capacity - ticket.quantityAvailable;
+        const newAvailable = Math.max(0, parseInt(capacity, 10) - sold);
+        await tx.ticket.update({
+          where: { id: ticket.id },
+          data: { price: parseFloat(ticketPrice), quantityAvailable: newAvailable },
+        });
+      }
+
+      return updatedEvent;
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: wasApproved ? 'Event updated. Status reset to PENDING for re-review.' : 'Event updated successfully.',
+      data: updated,
+    });
+  } catch (error) {
+    console.error('[updateEvent]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
+// Organizer/Admin only: get all confirmed attendees for an event
+const getEventAttendees = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const event = await prisma.event.findUnique({ where: { id } });
+    if (!event) return res.status(404).json({ success: false, message: 'Event not found.' });
+
+    const isOrganizer = event.organiserId === userId;
+    const isAdmin = req.user.role === 'ADMIN';
+    if (!isOrganizer && !isAdmin) {
+      return res.status(403).json({ success: false, message: 'Access denied.' });
+    }
+
+    const orders = await prisma.order.findMany({
+      where: { status: 'CONFIRMED', ticket: { eventId: id } },
+      include: {
+        attendee: { select: { id: true, fullName: true, email: true, phone: true } },
+        ticket:   { select: { ticketType: true, price: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return res.status(200).json({ success: true, count: orders.length, data: orders, event });
+  } catch (error) {
+    console.error('[getEventAttendees]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
 module.exports = {
   getAllEvents,
   getEventById,
   createEvent,
+  updateEvent,
   updateEventStatus,
   getPendingEvents,
   getOrganizerEvents,
   getAdminAllEvents,
+  getEventAttendees,
 };

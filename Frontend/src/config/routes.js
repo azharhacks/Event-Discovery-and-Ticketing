@@ -13,7 +13,8 @@ export const ROUTES = {
   ORGANIZER:         '/organizer',
   ORGANIZER_EVENTS:  '/organizer/events',
   ORGANIZER_CREATE:  '/organizer/events/create',
-  ORGANIZER_EDIT:    (id) => `/organizer/events/${id}/edit`,
+  ORGANIZER_EDIT:      (id) => `/organizer/events/${id}/edit`,
+  ORGANIZER_ATTENDEES: (id) => `/organizer/events/${id}/attendees`,
   ORGANIZER_PROFILE: '/organizer/profile',
 
   ADMIN:            '/admin',

@@ -28,6 +28,8 @@ export const getEvents = (params = {}) => {
 export const getEvent = (id) => request(`/events/${id}`);
 
 export const createEvent = (body) => request('/events', { method: 'POST', body: JSON.stringify(body) });
+export const updateEvent = (id, body) => request(`/events/${id}`, { method: 'PUT', body: JSON.stringify(body) });
+export const getEventAttendees = (id) => request(`/events/${id}/attendees`);
 export const getOrganizerEvents = () => request('/events/organizer/my-events');
 export const getPendingEvents = () => request('/events/admin/pending');
 export const getAdminEvents  = () => request('/events/admin/all');
