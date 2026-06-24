@@ -34,7 +34,7 @@ export default function LoginPage() {
     try {
       const res = await loginUser({ email, password });
       login(res.token, res.data);
-      showAlert('✓ Login successful! Redirecting…', 'success');
+      showAlert('Login successful! Redirecting...', 'success');
       setTimeout(() => navigate(ROUTES.HOME), 900);
     } catch (err) {
       showAlert(err?.message || 'Login failed. Please try again.');
@@ -101,10 +101,10 @@ export default function LoginPage() {
 
           <div className="auth-divider">or continue with</div>
           <div className="social-btns">
-            <button className="social-btn" onClick={() => showToast('🚧 Social login coming soon!')}>
+            <button className="social-btn" onClick={() => showToast('Social login coming soon!')}>
               Google
             </button>
-            <button className="social-btn" onClick={() => showToast('🚧 Social login coming soon!')}>
+            <button className="social-btn" onClick={() => showToast('Social login coming soon!')}>
               Apple
             </button>
           </div>

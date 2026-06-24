@@ -146,10 +146,27 @@ const callback = async (req, res) => {
     });
 
     // Update the related order status
-    await prisma.order.update({
+    const updatedOrder = await prisma.order.update({
       where: { id: payment.orderId },
       data: { status: newOrderStatus },
     });
+
+    // Generate QR code if payment was successful
+    if (newOrderStatus === 'CONFIRMED') {
+      const existingQR = await prisma.qRCode.findUnique({
+        where: { qrToken: payment.orderId },
+      });
+      if (!existingQR) {
+        await prisma.qRCode.create({
+          data: {
+            ticketId: updatedOrder.ticketId,
+            qrToken: payment.orderId,
+            isScanned: false,
+          },
+        });
+        console.log(`[callback] Generated QRCode for order ${payment.orderId}`);
+      }
+    }
 
     // Store the raw callback data in PaymentCallback
     await prisma.paymentCallback.upsert({

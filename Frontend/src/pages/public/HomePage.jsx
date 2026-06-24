@@ -34,12 +34,12 @@ export default function HomePage() {
     getEvents()
       .then((res) => {
         const events = res.data || [];
-        if (events.length >= 3) {
+        if (events.length > 0) {
           setFeatured(events.slice(0, 3));
-          setUpcoming(events.slice(0, 3));
+          setUpcoming(events.slice(0, 6));
         } else {
-          setFeatured([...events, ...DEMO_FEATURED].slice(0, 3));
-          setUpcoming([...events, ...DEMO_UPCOMING].slice(0, 3));
+          setFeatured(DEMO_FEATURED);
+          setUpcoming(DEMO_UPCOMING);
         }
       })
       .catch(() => {

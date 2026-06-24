@@ -105,23 +105,38 @@ const createEvent = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Category not found.' });
     }
 
-    const event = await prisma.event.create({
-      data: {
-        organiserId,
-        categoryId,
-        title,
-        description,
-        venue,
-        eventDate: new Date(eventDate),
-        eventTime,
-        ticketPrice: parseFloat(ticketPrice),
-        capacity: parseInt(capacity, 10),
-        bannerUrl: bannerUrl || null,
-        status: 'PENDING',
-      },
-      include: {
-        category: { select: { id: true, name: true } },
-      },
+    const event = await prisma.$transaction(async (tx) => {
+      const newEvent = await tx.event.create({
+        data: {
+          organiserId,
+          categoryId,
+          title,
+          description,
+          venue,
+          eventDate: new Date(eventDate),
+          eventTime,
+          ticketPrice: parseFloat(ticketPrice),
+          capacity: parseInt(capacity, 10),
+          bannerUrl: bannerUrl || null,
+          status: 'PENDING',
+        },
+        include: {
+          category: { select: { id: true, name: true } },
+        },
+      });
+
+      // Automatically create a default REGULAR ticket record
+      await tx.ticket.create({
+        data: {
+          eventId: newEvent.id,
+          ticketType: 'REGULAR',
+          price: parseFloat(ticketPrice),
+          quantityAvailable: parseInt(capacity, 10),
+          status: 'CONFIRMED',
+        },
+      });
+
+      return newEvent;
     });
 
     return res.status(201).json({
@@ -176,4 +191,81 @@ const updateEventStatus = async (req, res) => {
   }
 };
 
-module.exports = { getAllEvents, getEventById, createEvent, updateEventStatus };
+// Admin only: get all pending events
+const getPendingEvents = async (req, res) => {
+  try {
+    const events = await prisma.event.findMany({
+      where: { status: 'PENDING' },
+      include: {
+        category: { select: { id: true, name: true } },
+        organiser: { select: { id: true, fullName: true, email: true } },
+      },
+      orderBy: { eventDate: 'asc' },
+    });
+
+    return res.status(200).json({ success: true, data: events });
+  } catch (error) {
+    console.error('[getPendingEvents]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
+// Admin only: get ALL events regardless of status
+const getAdminAllEvents = async (req, res) => {
+  try {
+    const events = await prisma.event.findMany({
+      include: {
+        category:  { select: { id: true, name: true } },
+        organiser: { select: { id: true, fullName: true, email: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    return res.status(200).json({ success: true, data: events });
+  } catch (error) {
+    console.error('[getAdminAllEvents]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
+// Organizer only: get all events created by logged-in organizer
+const getOrganizerEvents = async (req, res) => {
+  try {
+    const organiserId = req.user.id;
+    const events = await prisma.event.findMany({
+      where: { organiserId },
+      include: {
+        category: { select: { id: true, name: true } },
+        tickets: {
+          select: {
+            id: true,
+            ticketType: true,
+            price: true,
+            quantityAvailable: true,
+            status: true,
+          },
+        },
+        _count: {
+          select: {
+            tickets: true,
+          },
+        },
+      },
+      orderBy: { eventDate: 'asc' },
+    });
+
+    return res.status(200).json({ success: true, data: events });
+  } catch (error) {
+    console.error('[getOrganizerEvents]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
+module.exports = {
+  getAllEvents,
+  getEventById,
+  createEvent,
+  updateEventStatus,
+  getPendingEvents,
+  getOrganizerEvents,
+  getAdminAllEvents,
+};

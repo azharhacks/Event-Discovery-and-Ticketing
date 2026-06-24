@@ -43,8 +43,11 @@ export default function EventsPage() {
     getEvents()
       .then((res) => {
         const live = res.data || [];
-        const ids  = new Set(live.map((e) => e.id));
-        setAllEvents([...live, ...DEMO_EVENTS.filter((e) => !ids.has(e.id))]);
+        if (live.length > 0) {
+          setAllEvents(live);
+        } else {
+          setAllEvents(DEMO_EVENTS);
+        }
       })
       .catch(() => setAllEvents(DEMO_EVENTS))
       .finally(() => setLoading(false));

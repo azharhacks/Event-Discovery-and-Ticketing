@@ -45,7 +45,7 @@ export default function SignupPage() {
         phone: phone ? formatPhone(phone) : undefined,
         role,
       });
-      showAlert('✓ Account created! Redirecting to login…', 'success');
+      showAlert('Account created! Redirecting to login...', 'success');
       setTimeout(() => navigate(`${ROUTES.LOGIN}?registered=1`), 1200);
     } catch (err) {
       showAlert(err?.message || 'Registration failed. Please try again.');
@@ -94,7 +94,7 @@ export default function SignupPage() {
                 Phone number <span style={{ fontWeight: 400, color: 'var(--muted)', fontSize: 12 }}>(optional — for M-Pesa)</span>
               </label>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <div className="phone-prefix">🇰🇪 +254</div>
+                <div className="phone-prefix">KE +254</div>
                 <input className="form-input" type="tel" id="phone" placeholder="7XX XXX XXX" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ flex: 1 }} />
               </div>
             </div>
