@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getEvents } from '../lib/api';
-
+//Fetch logic for events from the backend
 export function useEvents(params = {}) {
   const [events, setEvents]   = useState([]);
   const [loading, setLoading] = useState(true);
