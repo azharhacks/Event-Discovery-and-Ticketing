@@ -44,8 +44,7 @@ export default function App() {
 
             {/* ── Any logged-in user ─────────────────── */}
             <Route element={<ProtectedRoute />}>
-              <Route path={ROUTES.PROFILE}  element={<ProfilePage />} />
-              <Route path={ROUTES.CHECKOUT} element={<CheckoutPage />} />
+              <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
             </Route>
 
             {/* ── Attendee only ──────────────────────── */}
@@ -53,6 +52,7 @@ export default function App() {
               <Route element={<RoleRoute roles={["ATTENDEE"]} />}>
                 <Route path={ROUTES.DASHBOARD} element={<AttendeeDashboard />} />
                 <Route path={ROUTES.TICKETS}   element={<MyTicketsPage />} />
+                <Route path={ROUTES.CHECKOUT}  element={<CheckoutPage />} />
               </Route>
             </Route>
 

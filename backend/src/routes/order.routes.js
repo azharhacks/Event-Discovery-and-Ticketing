@@ -1,8 +1,11 @@
 const express = require('express');
-const { createOrder, getMyTickets, getOrderStatus } = require('../controllers/order.controller');
-const { protect } = require('../middleware/auth.middleware');
+const { createOrder, getMyTickets, getOrderStatus, getAllTransactions } = require('../controllers/order.controller');
+const { protect, adminOnly } = require('../middleware/auth.middleware');
 
 const router = express.Router();
+
+// GET /api/orders/admin/all - Admin only - All transactions
+router.get('/admin/all', protect, adminOnly, getAllTransactions);
 
 // POST /api/orders - Protected (Attendee) - Create a pending order
 router.post('/', protect, createOrder);

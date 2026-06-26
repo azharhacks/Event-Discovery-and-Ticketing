@@ -18,6 +18,21 @@ export default function MyTicketsPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleDownload = async (qrToken, eventTitle) => {
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${qrToken}`;
+    try {
+      const res  = await fetch(url);
+      const blob = await res.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `hafla-ticket-${(eventTitle || 'qr').replace(/\s+/g, '-').toLowerCase()}.png`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } catch {
+      window.open(url, '_blank');
+    }
+  };
+
   const fmtDate = (ds) => {
     if (!ds) return "";
     const d = new Date(ds);
@@ -97,8 +112,18 @@ export default function MyTicketsPage() {
             <h3 style={{ fontWeight: 800, fontSize: "18px", color: "var(--primary)", marginBottom: "4px" }}>{activeTicket.ticket?.event?.title}</h3>
             <p style={{ color: "var(--muted)", fontSize: "13px", marginBottom: "24px" }}>{fmtDate(activeTicket.ticket?.event?.eventDate)} · {activeTicket.ticket?.event?.eventTime}</p>
             {activeTicket.qrCode ? (
-              <div style={{ background: "#fff", border: "2px solid var(--border)", borderRadius: "var(--radius-md)", padding: "12px", display: "inline-block", marginBottom: "20px" }}>
-                <img src={"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + activeTicket.qrCode.qrToken} alt="Ticket QR Code" width="200" height="200" />
+              <div style={{ marginBottom: "20px" }}>
+                <div style={{ background: "#fff", border: "2px solid var(--border)", borderRadius: "var(--radius-md)", padding: "12px", display: "inline-block" }}>
+                  <img src={"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + activeTicket.qrCode.qrToken} alt="Ticket QR Code" width="200" height="200" />
+                </div>
+                <div style={{ marginTop: "12px" }}>
+                  <button
+                    onClick={() => handleDownload(activeTicket.qrCode.qrToken, activeTicket.ticket?.event?.title)}
+                    style={{ padding: "8px 20px", borderRadius: "8px", border: "1.5px solid var(--border)", background: "#fff", color: "var(--primary)", fontWeight: 600, fontSize: "13px", cursor: "pointer", fontFamily: "inherit", display: "inline-flex", alignItems: "center", gap: "6px" }}
+                  >
+                    ↓ Download QR Code
+                  </button>
+                </div>
               </div>
             ) : (
               <div style={{ background: "var(--light)", border: "2px dashed var(--border)", borderRadius: "var(--radius-md)", padding: "40px", marginBottom: "20px", color: "var(--muted)", fontSize: "13px" }}>QR code appears once payment is confirmed.</div>

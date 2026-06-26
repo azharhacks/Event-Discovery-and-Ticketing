@@ -43,6 +43,7 @@ export const getCategories = () => request('/categories');
 export const createOrder = (body) => request('/orders', { method: 'POST', body: JSON.stringify(body) });
 export const getMyTickets = () => request('/orders/my-tickets');
 export const getOrderStatus = (id) => request(`/orders/${id}/status`);
+export const getAdminTransactions = () => request('/orders/admin/all');
 
 // Payments
 export const initiateMpesaPay = (body) => request('/mpesa/pay', { method: 'POST', body: JSON.stringify(body) });

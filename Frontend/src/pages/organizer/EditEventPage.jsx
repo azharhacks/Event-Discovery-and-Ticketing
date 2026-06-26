@@ -51,6 +51,10 @@ export default function EditEventPage() {
       setError("Please fill in all required fields.");
       return;
     }
+    if (new Date(eventDate + "T" + eventTime) < new Date()) {
+      setError("Event date and time must be in the future.");
+      return;
+    }
     setSaving(true);
     try {
       await updateEvent(id, { ...form, ticketPrice: Number(form.ticketPrice), capacity: Number(form.capacity) });

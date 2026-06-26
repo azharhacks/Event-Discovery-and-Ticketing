@@ -170,4 +170,27 @@ const getOrderStatus = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getMyTickets, getOrderStatus };
+// Admin only: get all orders with payment details
+const getAllTransactions = async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      include: {
+        attendee: { select: { id: true, fullName: true, email: true } },
+        ticket: {
+          include: {
+            event: { select: { id: true, title: true, venue: true } },
+          },
+        },
+        payment: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return res.status(200).json({ success: true, count: orders.length, data: orders });
+  } catch (error) {
+    console.error('[getAllTransactions]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
+module.exports = { createOrder, getMyTickets, getOrderStatus, getAllTransactions };

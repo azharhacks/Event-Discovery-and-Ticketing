@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/layout/Footer";
-import { getAdminEvents, getAllUsers, updateEventStatus } from "../../lib/api";
+import { getAdminEvents, getAllUsers, updateEventStatus, getAdminTransactions } from "../../lib/api";
 
 const STATUS_STYLES = {
   APPROVED:  { bg: "#ecfdf5", color: "#047857", border: "#a7f3d0" },
@@ -24,18 +24,20 @@ const StatCard = ({ label, value, color }) => (
 );
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("Events");
-  const [events,  setEvents]  = useState([]);
-  const [users,   setUsers]   = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(null);
+  const [activeTab,    setActiveTab]    = useState("Events");
+  const [events,       setEvents]       = useState([]);
+  const [users,        setUsers]        = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [loading,      setLoading]      = useState(true);
+  const [updating,     setUpdating]     = useState(null);
 
   useEffect(() => {
     (async () => {
       try {
-        const [evRes, userRes] = await Promise.all([getAdminEvents(), getAllUsers()]);
+        const [evRes, userRes, txRes] = await Promise.all([getAdminEvents(), getAllUsers(), getAdminTransactions()]);
         setEvents(evRes.data || []);
         setUsers(userRes.data || []);
+        setTransactions(txRes.data || []);
       } catch (e) { console.error(e); }
       finally { setLoading(false); }
     })();
@@ -67,15 +69,17 @@ export default function AdminDashboard() {
         <div className="container" style={{ padding: "36px 20px 80px" }}>
           {/* Stats */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }}>
-            <StatCard label="Total Events"   value={events.length}                                         color="#2563eb" />
-            <StatCard label="Pending Review" value={events.filter((e) => e.status === "PENDING").length}   color="#d97706" />
-            <StatCard label="Approved"       value={events.filter((e) => e.status === "APPROVED").length}  color="#16a34a" />
-            <StatCard label="Total Users"    value={users.length}                                          color="#7c3aed" />
+            <StatCard label="Total Events"   value={events.length}                                                         color="#2563eb" />
+            <StatCard label="Pending Review" value={events.filter((e) => e.status === "PENDING").length}                   color="#d97706" />
+            <StatCard label="Approved"       value={events.filter((e) => e.status === "APPROVED").length}                  color="#16a34a" />
+            <StatCard label="Total Users"    value={users.length}                                                          color="#7c3aed" />
+            <StatCard label="Transactions"   value={transactions.length}                                                   color="#0d9488" />
+            <StatCard label="Total Revenue"  value={"KES " + transactions.filter(t => t.status === "CONFIRMED").reduce((s, t) => s + Number(t.totalAmount), 0).toLocaleString()} color="#059669" />
           </div>
 
           {/* Tabs */}
           <div style={{ display: "flex", gap: 4, background: "#f1f5f9", borderRadius: 8, padding: 4, marginBottom: 24, width: "fit-content" }}>
-            {["Events", "Users"].map((tab) => (
+            {["Events", "Users", "Transactions"].map((tab) => (
               <button key={tab} onClick={() => setActiveTab(tab)}
                 style={{ padding: "8px 24px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "inherit",
                   background: activeTab === tab ? "#fff" : "transparent", color: activeTab === tab ? "#0f172a" : "#64748b",
@@ -128,7 +132,7 @@ export default function AdminDashboard() {
                 );
               })}
             </div>
-          ) : (
+          ) : activeTab === "Users" ? (
             <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
               <div style={{ padding: "18px 24px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", margin: 0 }}>Registered Users</h3>
@@ -157,6 +161,50 @@ export default function AdminDashboard() {
                   </div>
                 );
               })}
+            </div>
+          ) : (
+            /* ── Transactions Tab ── */
+            <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
+              <div style={{ padding: "18px 24px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", margin: 0 }}>All Transactions</h3>
+                <span style={{ fontSize: 13, color: "#64748b" }}>{transactions.length} total</span>
+              </div>
+              {transactions.length === 0 ? (
+                <div style={{ padding: "60px 24px", textAlign: "center", color: "#64748b" }}>No transactions yet.</div>
+              ) : (
+                <>
+                  <div style={{ display: "grid", gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr", gap: 8, padding: "10px 24px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+                    {["Attendee", "Event", "Type", "Amount", "M-Pesa Receipt", "Status"].map((h) => (
+                      <div key={h} style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
+                    ))}
+                  </div>
+                  {transactions.map((tx) => {
+                    const isPaid    = tx.status === "CONFIRMED";
+                    const isFailed  = tx.status === "FAILED";
+                    const statusBg  = isPaid ? "#ecfdf5" : isFailed ? "#fef2f2" : "#fffbeb";
+                    const statusClr = isPaid ? "#047857" : isFailed ? "#b91c1c" : "#b45309";
+                    return (
+                      <div key={tx.id} style={{ display: "grid", gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr", gap: 8, padding: "13px 24px", borderBottom: "1px solid #f1f5f9", alignItems: "center" }}>
+                        <div>
+                          <div style={{ fontWeight: 600, fontSize: 13, color: "#0f172a" }}>{tx.attendee?.fullName || "—"}</div>
+                          <div style={{ fontSize: 11, color: "#94a3b8" }}>{tx.attendee?.email}</div>
+                        </div>
+                        <div style={{ fontSize: 13, color: "#475569", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {tx.ticket?.event?.title || "—"}
+                        </div>
+                        <div style={{ fontSize: 12, color: "#64748b" }}>{tx.ticket?.ticketType || "—"}</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb" }}>{fmtPrice(tx.totalAmount)}</div>
+                        <div style={{ fontSize: 11, color: "#64748b", fontFamily: "monospace" }}>
+                          {tx.payment?.mpesaReceiptNumber || "—"}
+                        </div>
+                        <span style={{ display: "inline-flex", padding: "3px 8px", borderRadius: 9999, fontSize: 11, fontWeight: 700, background: statusBg, color: statusClr, whiteSpace: "nowrap" }}>
+                          {tx.status}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
             </div>
           )}
         </div>

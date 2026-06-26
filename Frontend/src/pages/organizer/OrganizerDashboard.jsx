@@ -122,7 +122,15 @@ export default function OrganizerDashboard() {
                     </span>
                     <div style={{ textAlign: "right", minWidth: 80 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb" }}>{fmtPrice(ev.ticketPrice)}</div>
-                      <div style={{ fontSize: 11, color: "#94a3b8" }}>Cap: {ev.capacity}</div>
+                      {(() => {
+                        const avail = ev.tickets?.[0]?.quantityAvailable ?? ev.capacity;
+                        const sold  = ev.capacity - avail;
+                        return (
+                          <div style={{ fontSize: 11, color: sold > 0 ? "#16a34a" : "#94a3b8" }}>
+                            {sold} / {ev.capacity} sold
+                          </div>
+                        );
+                      })()}
                     </div>
                     <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
                       <button onClick={() => navigate(ROUTES.ORGANIZER_EDIT(ev.id))} style={btnSm("#eff6ff", "#2563eb")}>
