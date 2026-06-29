@@ -96,15 +96,7 @@ export default function HomePage() {
             <button className="hero-btn" onClick={handleSearch}>SEARCH</button>
           </div>
 
-          <div className="filter-tabs">
-            {FILTER_TABS.map((tab) => (
-              <button
-                key={tab}
-                className={`filter-tab ${activeTab === tab ? 'active' : ''}`}
-                onClick={() => setActiveTab(tab)}
-              >{tab}</button>
-            ))}
-          </div>
+          
         </div>
       </section>
 
