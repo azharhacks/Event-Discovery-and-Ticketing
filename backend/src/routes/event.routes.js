@@ -9,6 +9,7 @@ const {
   getOrganizerEvents,
   getAdminAllEvents,
   getEventAttendees,
+  getOrganizerSalesReport,
 } = require('../controllers/event.controller');
 const { protect, adminOnly, organizerOnly } = require('../middleware/auth.middleware');
 
@@ -22,6 +23,9 @@ router.get('/admin/pending', protect, adminOnly, getPendingEvents);
 
 // GET /api/events/admin/all – protected, admin only
 router.get('/admin/all', protect, adminOnly, getAdminAllEvents);
+
+// GET /api/events/admin/report – protected, admin only – organizer sales report
+router.get('/admin/report', protect, adminOnly, getOrganizerSalesReport);
 
 // GET /api/events/organizer/my-events – protected, organizer only
 router.get('/organizer/my-events', protect, organizerOnly, getOrganizerEvents);

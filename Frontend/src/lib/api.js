@@ -33,6 +33,7 @@ export const getEventAttendees = (id) => request(`/events/${id}/attendees`);
 export const getOrganizerEvents = () => request('/events/organizer/my-events');
 export const getPendingEvents = () => request('/events/admin/pending');
 export const getAdminEvents  = () => request('/events/admin/all');
+export const getOrganizerSalesReport = () => request('/events/admin/report');
 export const getAllUsers      = () => request('/users/all');
 export const updateEventStatus = (id, status) => request(`/events/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
 

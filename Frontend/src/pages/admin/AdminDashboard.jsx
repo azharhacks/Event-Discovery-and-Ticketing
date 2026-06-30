@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/layout/Footer";
-import { getAdminEvents, getAllUsers, updateEventStatus, getAdminTransactions } from "../../lib/api";
+import { getAdminEvents, getAllUsers, updateEventStatus, getAdminTransactions, getOrganizerSalesReport } from "../../lib/api";
 
 const STATUS_STYLES = {
   APPROVED:  { bg: "#E8F5EE", color: "#0E7257", border: "#A7DDC4" },
@@ -30,6 +30,8 @@ export default function AdminDashboard() {
   const [transactions, setTransactions] = useState([]);
   const [loading,      setLoading]      = useState(true);
   const [updating,     setUpdating]     = useState(null);
+  const [report,        setReport]        = useState(null);
+  const [reportLoading, setReportLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -42,6 +44,32 @@ export default function AdminDashboard() {
       finally { setLoading(false); }
     })();
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== "Reports" || report || reportLoading) return;
+    setReportLoading(true);
+    getOrganizerSalesReport()
+      .then((res) => setReport(res.data))
+      .catch((e) => console.error(e))
+      .finally(() => setReportLoading(false));
+  }, [activeTab, report, reportLoading]);
+
+  const downloadReportCSV = () => {
+    if (!report) return;
+    const rows = [["Organizer", "Email", "Event", "Category", "Status", "Tickets Sold", "Sales Generated (KES)"]];
+    report.organizers.forEach((org) => {
+      org.events.forEach((ev) => {
+        rows.push([org.fullName, org.email, ev.title, ev.category || "", ev.status, ev.ticketsSold, ev.salesGenerated]);
+      });
+    });
+    const csv = rows.map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `hafla-organizer-sales-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
 
   const fmtDate  = (ds) => ds ? new Date(ds).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "";
   const fmtPrice = (p)  => Number(p) === 0 ? "FREE" : "KES " + Number(p).toLocaleString();
@@ -79,7 +107,7 @@ export default function AdminDashboard() {
 
           {/* Tabs */}
           <div style={{ display: "flex", gap: 4, background: "#F1EFE4", borderRadius: 8, padding: 4, marginBottom: 24, width: "fit-content" }}>
-            {["Events", "Users", "Transactions"].map((tab) => (
+            {["Events", "Users", "Transactions", "Reports"].map((tab) => (
               <button key={tab} onClick={() => setActiveTab(tab)}
                 style={{ padding: "8px 24px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "inherit",
                   background: activeTab === tab ? "#fff" : "transparent", color: activeTab === tab ? "#0B3D2E" : "#66766C",
@@ -162,8 +190,7 @@ export default function AdminDashboard() {
                 );
               })}
             </div>
-          ) : (
-            /* ── Transactions Tab ── */
+          ) : activeTab === "Transactions" ? (
             <div style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
               <div style={{ padding: "18px 24px", borderBottom: "1px solid #E3DFD2", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0B3D2E", margin: 0 }}>All Transactions</h3>
@@ -203,6 +230,82 @@ export default function AdminDashboard() {
                       </div>
                     );
                   })}
+                </>
+              )}
+            </div>
+          ) : (
+            /* ── Reports Tab ── */
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+                <div>
+                  <h3 style={{ fontWeight: 700, fontSize: 16, color: "#0B3D2E", margin: 0 }}>Organizer Sales Report</h3>
+                  <p style={{ fontSize: 13, color: "#66766C", margin: "4px 0 0" }}>Events, tickets sold, and revenue generated per organizer</p>
+                </div>
+                <button
+                  onClick={downloadReportCSV}
+                  disabled={!report}
+                  style={{ padding: "9px 18px", borderRadius: 8, border: "none", background: report ? "#0B3D2E" : "#C9C2AC", color: "#fff", cursor: report ? "pointer" : "not-allowed", fontWeight: 600, fontSize: 13, fontFamily: "inherit" }}
+                >
+                  ↓ Download CSV
+                </button>
+              </div>
+
+              {reportLoading ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {[1, 2, 3].map((i) => <div key={i} className="skeleton" style={{ height: 100, borderRadius: 12 }} />)}
+                </div>
+              ) : !report || report.organizers.length === 0 ? (
+                <div style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, padding: "60px 24px", textAlign: "center", color: "#66766C" }}>
+                  No organizer sales data available yet.
+                </div>
+              ) : (
+                <>
+                  {/* Summary */}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 24 }}>
+                    <StatCard label="Organizers"     value={report.summary.totalOrganizers}              color="#9C6B1F" />
+                    <StatCard label="Events"         value={report.summary.totalEvents}                  color="#128C6B" />
+                    <StatCard label="Tickets Sold"   value={report.summary.totalTicketsSold}              color="#0F7A75" />
+                    <StatCard label="Total Sales"    value={"KES " + report.summary.totalSales.toLocaleString()} color="#B38A36" />
+                  </div>
+
+                  {/* Per-organizer breakdown */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                    {report.organizers.map((org) => (
+                      <div key={org.organizerId} style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
+                        <div style={{ padding: "16px 24px", borderBottom: "1px solid #E3DFD2", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, background: "#FAF8F3" }}>
+                          <div>
+                            <div style={{ fontWeight: 700, fontSize: 14, color: "#0B3D2E" }}>{org.fullName}</div>
+                            <div style={{ fontSize: 12, color: "#66766C" }}>{org.email}</div>
+                          </div>
+                          <div style={{ display: "flex", gap: 20, fontSize: 12, color: "#66766C" }}>
+                            <span><strong style={{ color: "#0B3D2E" }}>{org.totalEvents}</strong> event(s)</span>
+                            <span><strong style={{ color: "#0F7A75" }}>{org.totalTicketsSold}</strong> sold</span>
+                            <span><strong style={{ color: "#B38A36" }}>KES {org.totalSales.toLocaleString()}</strong> revenue</span>
+                          </div>
+                        </div>
+
+                        <div style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr 1fr 1fr 1fr", gap: 8, padding: "10px 24px", background: "#fff", borderBottom: "1px solid #F1EFE4" }}>
+                          {["Event", "Category", "Status", "Tickets Sold", "Sales (KES)"].map((h) => (
+                            <div key={h} style={{ fontSize: 11, fontWeight: 700, color: "#66766C", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
+                          ))}
+                        </div>
+                        {org.events.map((ev) => {
+                          const ss = STATUS_STYLES[ev.status] || STATUS_STYLES.CANCELLED;
+                          return (
+                            <div key={ev.id} style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr 1fr 1fr 1fr", gap: 8, padding: "12px 24px", borderBottom: "1px solid #F1EFE4", alignItems: "center" }}>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: "#0B3D2E", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{ev.title}</div>
+                              <div style={{ fontSize: 12, color: "#66766C" }}>{ev.category || "—"}</div>
+                              <span style={{ display: "inline-flex", padding: "3px 8px", borderRadius: 9999, fontSize: 11, fontWeight: 700, background: ss.bg, color: ss.color, border: `1px solid ${ss.border}`, width: "fit-content" }}>
+                                {ev.status}
+                              </span>
+                              <div style={{ fontSize: 13, fontWeight: 600, color: "#0F7A75" }}>{ev.ticketsSold}</div>
+                              <div style={{ fontSize: 13, fontWeight: 700, color: "#128C6B" }}>{fmtPrice(ev.salesGenerated)}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
                 </>
               )}
             </div>
