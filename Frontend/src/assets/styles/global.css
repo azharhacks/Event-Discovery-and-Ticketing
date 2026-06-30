@@ -4,24 +4,27 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-/* ── CSS Variables ── */
+/* ── CSS Variables — "Coastal Emerald" ── */
 :root {
-  --primary:    #0F1629;
-  --accent:     #F97316;
-  --accent-hover: #EA6C10;
-  --teal:       #0EA5E9;
-  --teal-light: #E0F2FE;
-  --bg:         #F8FAFC;
-  --card:       #FFFFFF;
-  --border:     #E2E8F0;
-  --text:       #1E293B;
-  --muted:      #64748B;
-  --light:      #F1F5F9;
+  --primary:      #0B3D2E;
+  --primary-dark: #082A20;
+  --accent:       #C9A24B;
+  --accent-hover: #B38A36;
+  --emerald:      #128C6B;
+  --emerald-dark: #0E7257;
+  --teal:         #0F7A75;
+  --teal-light:   #E3F3F1;
+  --bg:           #FAF8F3;
+  --card:         #FFFFFF;
+  --border:       #E3DFD2;
+  --text:         #16241D;
+  --muted:        #66766C;
+  --light:        #F1EFE4;
 
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md:  0 4px 16px rgba(0,0,0,0.1);
-  --shadow-lg:  0 10px 40px rgba(0,0,0,0.14);
-  --shadow-accent: 0 4px 20px rgba(249,115,22,0.35);
+  --shadow-sm:  0 1px 3px rgba(11,61,46,0.08), 0 1px 2px rgba(11,61,46,0.06);
+  --shadow-md:  0 4px 16px rgba(11,61,46,0.10);
+  --shadow-lg:  0 10px 40px rgba(11,61,46,0.16);
+  --shadow-accent: 0 4px 20px rgba(201,162,75,0.35);
 
   --radius-sm:  8px;
   --radius-md:  12px;
@@ -106,7 +109,7 @@ input, select { font-family: inherit; }
 .btn-primary:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(249,115,22,0.45);
+  box-shadow: 0 6px 24px rgba(201,162,75,0.45);
 }
 
 .btn-outline {
@@ -123,7 +126,7 @@ input, select { font-family: inherit; }
   background: var(--primary);
   color: #fff;
 }
-.btn-dark:hover { background: #1a2540; transform: translateY(-1px); }
+.btn-dark:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
 .btn-ghost {
   background: rgba(255,255,255,0.15);
@@ -236,7 +239,7 @@ input, select { font-family: inherit; }
    HERO
    ═══════════════════════════════════════════════ */
 .hero {
-  background: linear-gradient(135deg, #fff 0%, #F0F7FF 100%);
+  background: linear-gradient(135deg, #fff 0%, #F3F0E3 100%);
   padding: 56px 0 48px;
   border-bottom: 1px solid var(--border);
 }
@@ -287,7 +290,7 @@ input, select { font-family: inherit; }
 }
 .search-bar:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(249,115,22,0.1), var(--shadow-md);
+  box-shadow: 0 0 0 4px rgba(201,162,75,0.16), var(--shadow-md);
 }
 
 .search-field {
@@ -426,8 +429,8 @@ input, select { font-family: inherit; }
   letter-spacing: 0.5px;
 }
 .badge-featured { background: var(--accent); color: #fff; }
-.badge-free { background: #10B981; color: #fff; }
-.badge-pending { background: #F59E0B; color: #fff; }
+.badge-free { background: var(--emerald); color: #fff; }
+.badge-pending { background: #C9882E; color: #fff; }
 
 .event-card-body {
   padding: 18px 20px 20px;
@@ -472,7 +475,7 @@ input, select { font-family: inherit; }
   font-weight: 800;
   color: var(--primary);
 }
-.event-price.free { color: #10B981; }
+.event-price.free { color: var(--emerald); }
 
 /* ═══════════════════════════════════════════════
    CATEGORIES
@@ -484,8 +487,8 @@ input, select { font-family: inherit; }
 }
 
 .category-tile {
-  background: var(--card);
-  border: 1.5px solid var(--border);
+  background: linear-gradient(155deg, #16140E 0%, #0E0D09 100%);
+  border: 1.5px solid rgba(201,162,75,0.22);
   border-radius: var(--radius-lg);
   padding: 28px 20px;
   display: flex;
@@ -495,10 +498,11 @@ input, select { font-family: inherit; }
   cursor: pointer;
   transition: all var(--transition);
   text-align: center;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.22);
 }
 .category-tile:hover {
   border-color: var(--accent);
-  box-shadow: 0 4px 20px rgba(249,115,22,0.12);
+  box-shadow: 0 8px 28px rgba(201,162,75,0.24);
   transform: translateY(-3px);
 }
 
@@ -514,18 +518,20 @@ input, select { font-family: inherit; }
 }
 .category-tile:hover .cat-icon { transform: scale(1.12) rotate(-5deg); }
 
-.cat-music { background: #FFF1E6; }
-.cat-food   { background: #F0FDF4; }
-.cat-sports { background: #EFF6FF; }
-.cat-culture{ background: #FAF5FF; }
+.cat-music  { background: rgba(201,162,75,0.14); }
+.cat-food   { background: rgba(18,140,107,0.16); }
+.cat-sports { background: rgba(15,122,117,0.16); }
+.cat-culture{ background: rgba(156,107,31,0.16); }
 
 .cat-label {
   font-size: 14px;
   font-weight: 700;
-  color: var(--text);
+  color: #F1EFE4;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  transition: color var(--transition);
 }
+.category-tile:hover .cat-label { color: var(--accent); }
 
 /* ═══════════════════════════════════════════════
    UPCOMING EVENTS (List)
@@ -610,7 +616,7 @@ input, select { font-family: inherit; }
    ORGANIZER CTA
    ═══════════════════════════════════════════════ */
 .cta-section {
-  background: linear-gradient(135deg, var(--primary) 0%, #1a2d60 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--emerald-dark) 100%);
   padding: 64px 0;
   position: relative;
   overflow: hidden;
@@ -703,7 +709,7 @@ footer {
    EVENTS PAGE — Sidebar Layout
    ═══════════════════════════════════════════════ */
 .events-page-hero {
-  background: linear-gradient(135deg, var(--primary) 0%, #1a2d60 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--emerald-dark) 100%);
   padding: 40px 0;
 }
 .events-page-hero h1 {
@@ -996,13 +1002,13 @@ footer {
 }
 .fade-up { animation: fadeUp 0.4s ease forwards; }
 
-/* ─ Gradient category backgrounds ─ */
-.card-grad-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.card-grad-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-.card-grad-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-.card-grad-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-.card-grad-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-.card-grad-6 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+/* ─ Gradient category backgrounds — coastal tones ─ */
+.card-grad-1 { background: linear-gradient(135deg, #0B3D2E 0%, #128C6B 100%); }
+.card-grad-2 { background: linear-gradient(135deg, #0F7A75 0%, #1C8C6B 100%); }
+.card-grad-3 { background: linear-gradient(135deg, #C9A24B 0%, #C97B4A 100%); }
+.card-grad-4 { background: linear-gradient(135deg, #E8DEC2 0%, #C9A24B 100%); }
+.card-grad-5 { background: linear-gradient(135deg, #0B3D2E 0%, #0F7A75 100%); }
+.card-grad-6 { background: linear-gradient(135deg, #C97B4A 0%, #E8C468 100%); }
 /* ═══════════════════════════════════════════════
    AUTH PAGES — Login & Signup
    ═══════════════════════════════════════════════ */
@@ -1015,10 +1021,10 @@ footer {
 .auth-brand {
   background: linear-gradient(
     155deg,
-    #0D1B2A 0%,
-    #1a2d60 40%,
-    #1c3a5e 65%,
-    #0D2137 100%
+    #082A20 0%,
+    #0B3D2E 40%,
+    #0E5A43 65%,
+    #082A20 100%
   );
   display: flex;
   flex-direction: column;
@@ -1028,26 +1034,26 @@ footer {
   overflow: hidden;
 }
 
-/* Warm orange glow — bottom left (echoes logo's sun) */
+/* Brass glow — bottom left (echoes logo's sun) */
 .auth-brand::before {
   content: '';
   position: absolute;
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(249,115,22,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(201,162,75,0.20) 0%, transparent 70%);
   bottom: -160px;
   left: -120px;
 }
 
-/* Teal accent glow — top right (echoes logo's wave) */
+/* Ocean teal glow — top right (echoes logo's wave) */
 .auth-brand::after {
   content: '';
   position: absolute;
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(13,148,136,0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(15,122,117,0.18) 0%, transparent 70%);
   top: 40px;
   right: -80px;
 }
@@ -1060,7 +1066,7 @@ footer {
 .auth-brand-tagline {
   font-size: 11px;
   font-weight: 700;
-  color: rgba(249,115,22,0.9);
+  color: rgba(201,162,75,0.95);
   text-transform: uppercase;
   letter-spacing: 2.5px;
 }
@@ -1185,7 +1191,7 @@ footer {
 }
 .form-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+  box-shadow: 0 0 0 3px rgba(201,162,75,0.16);
 }
 .form-input::placeholder { color: var(--muted); }
 .form-input.error { border-color: #EF4444; }
@@ -1239,64 +1245,64 @@ footer {
 
 /* Attendee Role Selection */
 .role-option--attendee:hover {
-  border-color: #2563eb;
+  border-color: #128C6B;
   transform: translateY(-2px);
 }
 .role-option--attendee.selected {
-  border-color: #2563eb;
-  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.15), 0 4px 6px -2px rgba(37, 99, 235, 0.05);
+  border-color: #128C6B;
+  background: linear-gradient(135deg, #E8F5EE 0%, #D3ECDF 100%);
+  box-shadow: 0 10px 15px -3px rgba(18, 140, 107, 0.15), 0 4px 6px -2px rgba(18, 140, 107, 0.05);
   transform: translateY(-2px);
 }
 .role-option--attendee.selected .role-option-icon {
-  color: #2563eb;
+  color: #128C6B;
 }
 .role-option--attendee.selected .role-option-radio {
-  border-color: #2563eb;
+  border-color: #128C6B;
 }
 .role-option--attendee.selected .role-option-radio-inner {
-  background: #2563eb;
+  background: #128C6B;
 }
 .role-option--attendee .role-option-badge {
-  color: #2563eb;
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
+  color: #0E7257;
+  background: #E8F5EE;
+  border: 1px solid #A7DDC4;
 }
 .role-option--attendee.selected .role-option-badge {
   color: #fff;
-  background: #2563eb;
-  border-color: #2563eb;
+  background: #128C6B;
+  border-color: #128C6B;
 }
 
 /* Organizer Role Selection */
 .role-option--organizer:hover {
-  border-color: #7c3aed;
+  border-color: #B38A36;
   transform: translateY(-2px);
 }
 .role-option--organizer.selected {
-  border-color: #7c3aed;
-  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
-  box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.15), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+  border-color: #B38A36;
+  background: linear-gradient(135deg, #FBF3E3 0%, #F3E4BE 100%);
+  box-shadow: 0 10px 15px -3px rgba(179, 138, 54, 0.18), 0 4px 6px -2px rgba(179, 138, 54, 0.06);
   transform: translateY(-2px);
 }
 .role-option--organizer.selected .role-option-icon {
-  color: #7c3aed;
+  color: #9C6B1F;
 }
 .role-option--organizer.selected .role-option-radio {
-  border-color: #7c3aed;
+  border-color: #B38A36;
 }
 .role-option--organizer.selected .role-option-radio-inner {
-  background: #7c3aed;
+  background: #B38A36;
 }
 .role-option--organizer .role-option-badge {
-  color: #7c3aed;
-  background: #faf5ff;
-  border: 1px solid #e9d5ff;
+  color: #9C6B1F;
+  background: #FBF3E3;
+  border: 1px solid #E8D3A0;
 }
 .role-option--organizer.selected .role-option-badge {
   color: #fff;
-  background: #7c3aed;
-  border-color: #7c3aed;
+  background: #B38A36;
+  border-color: #B38A36;
 }
 
 .role-option-title {
@@ -1358,7 +1364,7 @@ footer {
 }
 .auth-alert.show { display: block; }
 .auth-alert.error { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
-.auth-alert.success { background: #F0FDF4; color: #15803D; border: 1px solid #BBF7D0; }
+.auth-alert.success { background: #E8F5EE; color: #0E7257; border: 1px solid #A7DDC4; }
 
 /* Divider */
 .auth-divider {
@@ -1556,7 +1562,7 @@ footer {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, #9C6B1F 100%);
   color: #fff;
   font-size: 13px;
   font-weight: 800;
@@ -1626,8 +1632,8 @@ footer {
   margin-top: 5px;
   font-size: 11px;
   font-weight: 700;
-  background: rgba(249,115,22,0.1);
-  color: var(--accent);
+  background: rgba(201,162,75,0.14);
+  color: var(--accent-hover);
   padding: 2px 8px;
   border-radius: 999px;
 }

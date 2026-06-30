@@ -4,22 +4,22 @@ import Footer from "../../components/layout/Footer";
 import { getAdminEvents, getAllUsers, updateEventStatus, getAdminTransactions } from "../../lib/api";
 
 const STATUS_STYLES = {
-  APPROVED:  { bg: "#ecfdf5", color: "#047857", border: "#a7f3d0" },
+  APPROVED:  { bg: "#E8F5EE", color: "#0E7257", border: "#A7DDC4" },
   PENDING:   { bg: "#fffbeb", color: "#b45309", border: "#fde68a" },
   REJECTED:  { bg: "#fef2f2", color: "#b91c1c", border: "#fca5a5" },
-  CANCELLED: { bg: "#f8fafc", color: "#475569", border: "#e2e8f0" },
+  CANCELLED: { bg: "#FAF8F3", color: "#4A5950", border: "#E3DFD2" },
 };
 
 const ROLE_STYLES = {
   ADMIN:     { bg: "#fef2f2", color: "#dc2626", border: "#fca5a5" },
-  ORGANIZER: { bg: "#faf5ff", color: "#7c3aed", border: "#e9d5ff" },
-  ATTENDEE:  { bg: "#eff6ff", color: "#2563eb", border: "#bfdbfe" },
+  ORGANIZER: { bg: "#FBF3E3", color: "#9C6B1F", border: "#E8D3A0" },
+  ATTENDEE:  { bg: "#E3F3F1", color: "#128C6B", border: "#BFE3DF" },
 };
 
 const StatCard = ({ label, value, color }) => (
-  <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "18px 22px", boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)" }}>
-    <span style={{ fontSize: 13, color: "#64748b", fontWeight: 500, display: "block", marginBottom: 4 }}>{label}</span>
-    <span style={{ fontSize: 24, fontWeight: 800, color: color || "#0f172a" }}>{value}</span>
+  <div style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, padding: "18px 22px", boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)" }}>
+    <span style={{ fontSize: 13, color: "#66766C", fontWeight: 500, display: "block", marginBottom: 4 }}>{label}</span>
+    <span style={{ fontSize: 24, fontWeight: 800, color: color || "#0B3D2E" }}>{value}</span>
   </div>
 );
 
@@ -56,33 +56,33 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#f8fafc" }}>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#FAF8F3" }}>
       <Navbar />
       <div style={{ flex: 1 }}>
-        <div style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", padding: "40px 0" }}>
+        <div style={{ background: "linear-gradient(135deg, #0B3D2E 0%, #0E5A43 100%)", padding: "40px 0" }}>
           <div className="container">
             <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 800, margin: 0 }}>Admin Control Panel</h1>
-            <p style={{ color: "#94a3b8", marginTop: 6, margin: 0, fontSize: 14 }}>Moderate events and manage platform users</p>
+            <p style={{ color: "#8A968D", marginTop: 6, margin: 0, fontSize: 14 }}>Moderate events and manage platform users</p>
           </div>
         </div>
 
         <div className="container" style={{ padding: "36px 20px 80px" }}>
           {/* Stats */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }}>
-            <StatCard label="Total Events"   value={events.length}                                                         color="#2563eb" />
+            <StatCard label="Total Events"   value={events.length}                                                         color="#128C6B" />
             <StatCard label="Pending Review" value={events.filter((e) => e.status === "PENDING").length}                   color="#d97706" />
-            <StatCard label="Approved"       value={events.filter((e) => e.status === "APPROVED").length}                  color="#16a34a" />
-            <StatCard label="Total Users"    value={users.length}                                                          color="#7c3aed" />
-            <StatCard label="Transactions"   value={transactions.length}                                                   color="#0d9488" />
-            <StatCard label="Total Revenue"  value={"KES " + transactions.filter(t => t.status === "CONFIRMED").reduce((s, t) => s + Number(t.totalAmount), 0).toLocaleString()} color="#059669" />
+            <StatCard label="Approved"       value={events.filter((e) => e.status === "APPROVED").length}                  color="#0E7257" />
+            <StatCard label="Total Users"    value={users.length}                                                          color="#9C6B1F" />
+            <StatCard label="Transactions"   value={transactions.length}                                                   color="#0F7A75" />
+            <StatCard label="Total Revenue"  value={"KES " + transactions.filter(t => t.status === "CONFIRMED").reduce((s, t) => s + Number(t.totalAmount), 0).toLocaleString()} color="#B38A36" />
           </div>
 
           {/* Tabs */}
-          <div style={{ display: "flex", gap: 4, background: "#f1f5f9", borderRadius: 8, padding: 4, marginBottom: 24, width: "fit-content" }}>
+          <div style={{ display: "flex", gap: 4, background: "#F1EFE4", borderRadius: 8, padding: 4, marginBottom: 24, width: "fit-content" }}>
             {["Events", "Users", "Transactions"].map((tab) => (
               <button key={tab} onClick={() => setActiveTab(tab)}
                 style={{ padding: "8px 24px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "inherit",
-                  background: activeTab === tab ? "#fff" : "transparent", color: activeTab === tab ? "#0f172a" : "#64748b",
+                  background: activeTab === tab ? "#fff" : "transparent", color: activeTab === tab ? "#0B3D2E" : "#66766C",
                   boxShadow: activeTab === tab ? "0 1px 2px rgb(0 0 0 / 0.05)" : "none", transition: "all 0.15s ease" }}>
                 {tab}
               </button>
@@ -94,31 +94,31 @@ export default function AdminDashboard() {
               {[1, 2, 3, 4].map((i) => <div key={i} className="skeleton" style={{ height: 60, borderRadius: 8 }} />)}
             </div>
           ) : activeTab === "Events" ? (
-            <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
-              <div style={{ padding: "18px 24px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", margin: 0 }}>All Events</h3>
-                <span style={{ fontSize: 13, color: "#64748b" }}>{events.length} total</span>
+            <div style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
+              <div style={{ padding: "18px 24px", borderBottom: "1px solid #E3DFD2", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0B3D2E", margin: 0 }}>All Events</h3>
+                <span style={{ fontSize: 13, color: "#66766C" }}>{events.length} total</span>
               </div>
               {events.length === 0 ? (
-                <div style={{ padding: "60px 24px", textAlign: "center", color: "#64748b" }}>No events found.</div>
+                <div style={{ padding: "60px 24px", textAlign: "center", color: "#66766C" }}>No events found.</div>
               ) : events.map((ev) => {
                 const ss = STATUS_STYLES[ev.status] || STATUS_STYLES.CANCELLED;
                 return (
-                  <div key={ev.id} style={{ padding: "14px 24px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+                  <div key={ev.id} style={{ padding: "14px 24px", borderBottom: "1px solid #F1EFE4", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
                     <div style={{ flex: 1, minWidth: 220 }}>
-                      <div style={{ fontWeight: 700, fontSize: 14, color: "#0f172a", marginBottom: 3 }}>{ev.title}</div>
-                      <div style={{ fontSize: 12, color: "#64748b" }}>{fmtDate(ev.eventDate)} · {ev.venue}</div>
-                      <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>By: {ev.organizer?.fullName || ev.organizer?.email || "—"}</div>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: "#0B3D2E", marginBottom: 3 }}>{ev.title}</div>
+                      <div style={{ fontSize: 12, color: "#66766C" }}>{fmtDate(ev.eventDate)} · {ev.venue}</div>
+                      <div style={{ fontSize: 11, color: "#8A968D", marginTop: 2 }}>By: {ev.organizer?.fullName || ev.organizer?.email || "—"}</div>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                       <span style={{ display: "inline-flex", padding: "4px 10px", borderRadius: 9999, fontSize: 11, fontWeight: 700, background: ss.bg, color: ss.color, border: `1px solid ${ss.border}` }}>
                         {ev.status}
                       </span>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: "#2563eb", minWidth: 80, textAlign: "right" }}>{fmtPrice(ev.ticketPrice)}</span>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: "#128C6B", minWidth: 80, textAlign: "right" }}>{fmtPrice(ev.ticketPrice)}</span>
                       {ev.status === "PENDING" && (
                         <div style={{ display: "flex", gap: 8 }}>
                           <button onClick={() => handleStatusChange(ev.id, "APPROVED")} disabled={updating === ev.id}
-                            style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#10b981", color: "#fff", cursor: "pointer", fontWeight: 600, fontSize: 12, fontFamily: "inherit" }}>
+                            style={{ padding: "5px 12px", borderRadius: 6, border: "none", background: "#128C6B", color: "#fff", cursor: "pointer", fontWeight: 600, fontSize: 12, fontFamily: "inherit" }}>
                             Approve
                           </button>
                           <button onClick={() => handleStatusChange(ev.id, "REJECTED")} disabled={updating === ev.id}
@@ -133,29 +133,29 @@ export default function AdminDashboard() {
               })}
             </div>
           ) : activeTab === "Users" ? (
-            <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
-              <div style={{ padding: "18px 24px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", margin: 0 }}>Registered Users</h3>
-                <span style={{ fontSize: 13, color: "#64748b" }}>{users.length} total</span>
+            <div style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
+              <div style={{ padding: "18px 24px", borderBottom: "1px solid #E3DFD2", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0B3D2E", margin: 0 }}>Registered Users</h3>
+                <span style={{ fontSize: 13, color: "#66766C" }}>{users.length} total</span>
               </div>
               {users.length === 0 ? (
-                <div style={{ padding: "60px 24px", textAlign: "center", color: "#64748b" }}>No users registered yet.</div>
+                <div style={{ padding: "60px 24px", textAlign: "center", color: "#66766C" }}>No users registered yet.</div>
               ) : users.map((u) => {
-                const rs = ROLE_STYLES[u.role] || { bg: "#f8fafc", color: "#475569", border: "#e2e8f0" };
+                const rs = ROLE_STYLES[u.role] || { bg: "#FAF8F3", color: "#4A5950", border: "#E3DFD2" };
                 const initials = (u.fullName || "U").split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
                 return (
-                  <div key={u.id} style={{ padding: "14px 24px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", gap: 14 }}>
-                    <div style={{ width: 38, height: 38, borderRadius: "50%", background: "linear-gradient(135deg, #1e293b, #0f172a)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
+                  <div key={u.id} style={{ padding: "14px 24px", borderBottom: "1px solid #F1EFE4", display: "flex", alignItems: "center", gap: 14 }}>
+                    <div style={{ width: 38, height: 38, borderRadius: "50%", background: "linear-gradient(135deg, #0E5A43, #0B3D2E)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>
                       {initials}
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 700, fontSize: 14, color: "#0f172a" }}>{u.fullName || "Unnamed"}</div>
-                      <div style={{ fontSize: 12, color: "#64748b" }}>{u.email}</div>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: "#0B3D2E" }}>{u.fullName || "Unnamed"}</div>
+                      <div style={{ fontSize: 12, color: "#66766C" }}>{u.email}</div>
                     </div>
                     <span style={{ display: "inline-flex", padding: "4px 10px", borderRadius: 9999, fontSize: 11, fontWeight: 700, background: rs.bg, color: rs.color, border: `1px solid ${rs.border}` }}>
                       {u.role}
                     </span>
-                    <span style={{ fontSize: 12, color: "#94a3b8", minWidth: 80, textAlign: "right" }}>
+                    <span style={{ fontSize: 12, color: "#8A968D", minWidth: 80, textAlign: "right" }}>
                       {new Date(u.createdAt).toLocaleDateString()}
                     </span>
                   </div>
@@ -164,37 +164,37 @@ export default function AdminDashboard() {
             </div>
           ) : (
             /* ── Transactions Tab ── */
-            <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
-              <div style={{ padding: "18px 24px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", margin: 0 }}>All Transactions</h3>
-                <span style={{ fontSize: 13, color: "#64748b" }}>{transactions.length} total</span>
+            <div style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", overflow: "hidden" }}>
+              <div style={{ padding: "18px 24px", borderBottom: "1px solid #E3DFD2", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0B3D2E", margin: 0 }}>All Transactions</h3>
+                <span style={{ fontSize: 13, color: "#66766C" }}>{transactions.length} total</span>
               </div>
               {transactions.length === 0 ? (
-                <div style={{ padding: "60px 24px", textAlign: "center", color: "#64748b" }}>No transactions yet.</div>
+                <div style={{ padding: "60px 24px", textAlign: "center", color: "#66766C" }}>No transactions yet.</div>
               ) : (
                 <>
-                  <div style={{ display: "grid", gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr", gap: 8, padding: "10px 24px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr", gap: 8, padding: "10px 24px", background: "#FAF8F3", borderBottom: "1px solid #E3DFD2" }}>
                     {["Attendee", "Event", "Type", "Amount", "M-Pesa Receipt", "Status"].map((h) => (
-                      <div key={h} style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
+                      <div key={h} style={{ fontSize: 11, fontWeight: 700, color: "#66766C", textTransform: "uppercase", letterSpacing: "0.5px" }}>{h}</div>
                     ))}
                   </div>
                   {transactions.map((tx) => {
                     const isPaid    = tx.status === "CONFIRMED";
                     const isFailed  = tx.status === "FAILED";
-                    const statusBg  = isPaid ? "#ecfdf5" : isFailed ? "#fef2f2" : "#fffbeb";
-                    const statusClr = isPaid ? "#047857" : isFailed ? "#b91c1c" : "#b45309";
+                    const statusBg  = isPaid ? "#E8F5EE" : isFailed ? "#fef2f2" : "#fffbeb";
+                    const statusClr = isPaid ? "#0E7257" : isFailed ? "#b91c1c" : "#b45309";
                     return (
-                      <div key={tx.id} style={{ display: "grid", gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr", gap: 8, padding: "13px 24px", borderBottom: "1px solid #f1f5f9", alignItems: "center" }}>
+                      <div key={tx.id} style={{ display: "grid", gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr", gap: 8, padding: "13px 24px", borderBottom: "1px solid #F1EFE4", alignItems: "center" }}>
                         <div>
-                          <div style={{ fontWeight: 600, fontSize: 13, color: "#0f172a" }}>{tx.attendee?.fullName || "—"}</div>
-                          <div style={{ fontSize: 11, color: "#94a3b8" }}>{tx.attendee?.email}</div>
+                          <div style={{ fontWeight: 600, fontSize: 13, color: "#0B3D2E" }}>{tx.attendee?.fullName || "—"}</div>
+                          <div style={{ fontSize: 11, color: "#8A968D" }}>{tx.attendee?.email}</div>
                         </div>
-                        <div style={{ fontSize: 13, color: "#475569", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <div style={{ fontSize: 13, color: "#4A5950", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {tx.ticket?.event?.title || "—"}
                         </div>
-                        <div style={{ fontSize: 12, color: "#64748b" }}>{tx.ticket?.ticketType || "—"}</div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: "#2563eb" }}>{fmtPrice(tx.totalAmount)}</div>
-                        <div style={{ fontSize: 11, color: "#64748b", fontFamily: "monospace" }}>
+                        <div style={{ fontSize: 12, color: "#66766C" }}>{tx.ticket?.ticketType || "—"}</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#128C6B" }}>{fmtPrice(tx.totalAmount)}</div>
+                        <div style={{ fontSize: 11, color: "#66766C", fontFamily: "monospace" }}>
                           {tx.payment?.mpesaReceiptNumber || "—"}
                         </div>
                         <span style={{ display: "inline-flex", padding: "3px 8px", borderRadius: 9999, fontSize: 11, fontWeight: 700, background: statusBg, color: statusClr, whiteSpace: "nowrap" }}>

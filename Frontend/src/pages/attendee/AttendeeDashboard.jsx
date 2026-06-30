@@ -43,7 +43,7 @@ export default function AttendeeDashboard() {
       <Navbar />
 
       {/* Header */}
-      <div style={{ background: 'linear-gradient(135deg, var(--primary) 0%, #1a2d60 100%)', padding: '48px 0 36px' }}>
+      <div style={{ background: 'linear-gradient(135deg, var(--primary) 0%, #0E5A43 100%)', padding: '48px 0 36px' }}>
         <div className="container">
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', marginBottom: '6px' }}>Welcome back</p>
           <h1 style={{ color: '#fff', fontSize: '30px', fontWeight: 800, marginBottom: '4px' }}>
@@ -118,7 +118,7 @@ export default function AttendeeDashboard() {
                     onClick={() => navigate(ROUTES.TICKETS)}
                     style={{ background: '#fff', border: '1.5px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: '16px', cursor: 'pointer', boxShadow: 'var(--shadow-sm)', transition: 'box-shadow var(--transition)' }}
                   >
-                    <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'linear-gradient(135deg, var(--primary), #1a2d60)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', flexShrink: 0 }}>
+                    <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'linear-gradient(135deg, var(--primary), #0E5A43)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '18px', flexShrink: 0 }}>
                       🎟️
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -131,7 +131,7 @@ export default function AttendeeDashboard() {
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: '14px', color: 'var(--accent)' }}>{fmt(order.totalAmount)}</div>
-                      <div style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', marginTop: '4px', background: isConfirmed ? '#D1FAE5' : '#FEF3C7', color: isConfirmed ? '#059669' : '#D97706' }}>
+                      <div style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', marginTop: '4px', background: isConfirmed ? '#E8F5EE' : '#FBF3E3', color: isConfirmed ? '#0E7257' : '#B38A36' }}>
                         {order.status}
                       </div>
                     </div>

@@ -2,9 +2,9 @@ const LEVELS = [
   { label: 'Too short',   color: '#EF4444', width: '15%' },
   { label: 'Weak',        color: '#F97316', width: '30%' },
   { label: 'Fair',        color: '#FBBF24', width: '55%' },
-  { label: 'Good',        color: '#34D399', width: '75%' },
-  { label: 'Strong',      color: '#10B981', width: '90%' },
-  { label: 'Very strong', color: '#059669', width: '100%' },
+  { label: 'Good',        color: '#5FB593', width: '75%' },
+  { label: 'Strong',      color: '#128C6B', width: '90%' },
+  { label: 'Very strong', color: '#0E7257', width: '100%' },
 ];
 
 function score(pw) {

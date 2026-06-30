@@ -72,7 +72,7 @@ export default function EventDetailPage() {
       <>
         <Navbar />
         <div className="container" style={{ padding: '80px 24px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20, color: '#94a3b8' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20, color: '#8A968D' }}>
             <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10"/>
               <line x1="12" x2="12" y1="8" y2="12"/>
@@ -122,12 +122,12 @@ export default function EventDetailPage() {
 
         {event.status !== 'APPROVED' && (
           <div style={{
-            background: event.status === 'PENDING' ? '#fffbeb' : event.status === 'REJECTED' ? '#fef2f2' : '#f8fafc',
-            border: `1.5px solid ${event.status === 'PENDING' ? '#fde68a' : event.status === 'REJECTED' ? '#fca5a5' : '#e2e8f0'}`,
+            background: event.status === 'PENDING' ? '#fffbeb' : event.status === 'REJECTED' ? '#fef2f2' : '#FAF8F3',
+            border: `1.5px solid ${event.status === 'PENDING' ? '#fde68a' : event.status === 'REJECTED' ? '#fca5a5' : '#E3DFD2'}`,
             borderRadius: 'var(--radius-sm)',
             padding: '16px 20px',
             marginBottom: '24px',
-            color: event.status === 'PENDING' ? '#b45309' : event.status === 'REJECTED' ? '#b91c1c' : '#475569',
+            color: event.status === 'PENDING' ? '#b45309' : event.status === 'REJECTED' ? '#b91c1c' : '#4A5950',
             fontSize: '14px',
             fontWeight: 500,
             display: 'flex',
@@ -178,7 +178,7 @@ export default function EventDetailPage() {
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                background: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%)',
+                background: 'linear-gradient(135deg, #0B3D2E 0%, #1e3a5f 100%)',
                 color: 'rgba(255,255,255,0.15)'
               }}
             >

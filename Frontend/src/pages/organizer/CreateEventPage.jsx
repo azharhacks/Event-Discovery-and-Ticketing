@@ -48,27 +48,27 @@ export default function CreateEventPage() {
 
   const field = {
     width: "100%", padding: "12px 14px", borderRadius: 8,
-    border: "1.5px solid #e2e8f0", outline: "none", fontSize: 15,
-    fontFamily: "inherit", background: "#fff", color: "#1e293b", boxSizing: "border-box"
+    border: "1.5px solid #E3DFD2", outline: "none", fontSize: 15,
+    fontFamily: "inherit", background: "#fff", color: "#0E5A43", boxSizing: "border-box"
   };
   const label = {
-    fontSize: 12, fontWeight: 700, color: "#64748b",
+    fontSize: 12, fontWeight: 700, color: "#66766C",
     textTransform: "uppercase", letterSpacing: "0.5px", display: "block", marginBottom: 8
   };
   const card = {
-    background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12,
+    background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12,
     padding: 28, boxShadow: "0 1px 3px rgb(0 0 0 / 0.05)", marginBottom: 20
   };
-  const cardTitle = { fontSize: 14, fontWeight: 700, color: "#0f172a", marginBottom: 20, marginTop: 0, borderBottom: "1px solid #f1f5f9", paddingBottom: 12 };
+  const cardTitle = { fontSize: 14, fontWeight: 700, color: "#0B3D2E", marginBottom: 20, marginTop: 0, borderBottom: "1px solid #F1EFE4", paddingBottom: 12 };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#f8fafc" }}>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#FAF8F3" }}>
       <Navbar />
       <div style={{ flex: 1 }}>
-        <div style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)", padding: "40px 0" }}>
+        <div style={{ background: "linear-gradient(135deg, #0B3D2E 0%, #0E5A43 100%)", padding: "40px 0" }}>
           <div className="container" style={{ maxWidth: 760 }}>
             <h1 style={{ color: "#fff", fontSize: 26, fontWeight: 800, margin: 0 }}>Create New Event</h1>
-            <p style={{ color: "#94a3b8", marginTop: 6, margin: 0, fontSize: 14 }}>
+            <p style={{ color: "#8A968D", marginTop: 6, margin: 0, fontSize: 14 }}>
               Fill in the event details. It will be reviewed by an admin before going live.
             </p>
           </div>
@@ -77,14 +77,14 @@ export default function CreateEventPage() {
         <div className="container" style={{ maxWidth: 760, padding: "36px 20px 80px" }}>
           {success ? (
             <div style={{ ...card, textAlign: "center", padding: "56px 32px" }}>
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, color: "#10b981" }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, color: "#128C6B" }}>
                 <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                   <polyline points="22 4 12 14.01 9 11.01"/>
                 </svg>
               </div>
-              <h2 style={{ fontWeight: 800, fontSize: 22, color: "#0f172a", marginBottom: 8 }}>Event Submitted!</h2>
-              <p style={{ color: "#64748b" }}>Your event is pending admin approval. Redirecting to your dashboard...</p>
+              <h2 style={{ fontWeight: 800, fontSize: 22, color: "#0B3D2E", marginBottom: 8 }}>Event Submitted!</h2>
+              <p style={{ color: "#66766C" }}>Your event is pending admin approval. Redirecting to your dashboard...</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 0 }}>
@@ -156,7 +156,7 @@ export default function CreateEventPage() {
                     <label style={label}>Banner Image URL</label>
                     <input name="bannerUrl" type="url" style={field} placeholder="https://..." value={form.bannerUrl} onChange={handleChange} />
                     {form.bannerUrl && (
-                      <div style={{ marginTop: 12, borderRadius: 8, overflow: "hidden", border: "1px solid #e2e8f0" }}>
+                      <div style={{ marginTop: 12, borderRadius: 8, overflow: "hidden", border: "1px solid #E3DFD2" }}>
                         <img src={form.bannerUrl} alt="Banner preview" style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }}
                           onError={(e) => (e.target.style.display = "none")} />
                       </div>
@@ -168,11 +168,11 @@ export default function CreateEventPage() {
               {/* Actions */}
               <div style={{ display: "flex", gap: 14 }}>
                 <button type="button" onClick={() => navigate(ROUTES.ORGANIZER)}
-                  style={{ padding: "12px 24px", borderRadius: 8, border: "1.5px solid #e2e8f0", background: "#fff", color: "#475569", fontWeight: 600, fontSize: 14, cursor: "pointer", fontFamily: "inherit" }}>
+                  style={{ padding: "12px 24px", borderRadius: 8, border: "1.5px solid #E3DFD2", background: "#fff", color: "#4A5950", fontWeight: 600, fontSize: 14, cursor: "pointer", fontFamily: "inherit" }}>
                   Cancel
                 </button>
                 <button type="submit" disabled={loading}
-                  style={{ flex: 1, padding: "12px 24px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)", color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer", fontFamily: "inherit" }}>
+                  style={{ flex: 1, padding: "12px 24px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, #0E5A43 0%, #0B3D2E 100%)", color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer", fontFamily: "inherit" }}>
                   {loading ? "Submitting..." : "Submit Event for Review"}
                 </button>
               </div>

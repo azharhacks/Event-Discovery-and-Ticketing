@@ -119,10 +119,10 @@ export default function HomePage() {
           </div>
           <div className="categories-grid">
             {[
-              { name: 'Music',   color: '#EA580C', icon: <path d="M9 18V5l12-2v13"/>, extra: <><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></> },
-              { name: 'Food',    color: '#16A34A', icon: <><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></> },
-              { name: 'Sports',  color: '#2563EB', icon: <><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93 19.07 19.07"/><path d="M4.93 19.07 19.07 4.93"/></> },
-              { name: 'Culture', color: '#7C3AED', icon: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></> },
+              { name: 'Music',   color: '#C9A24B', icon: <path d="M9 18V5l12-2v13"/>, extra: <><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></> },
+              { name: 'Food',    color: '#128C6B', icon: <><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></> },
+              { name: 'Sports',  color: '#0F7A75', icon: <><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93 19.07 19.07"/><path d="M4.93 19.07 19.07 4.93"/></> },
+              { name: 'Culture', color: '#9C6B1F', icon: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></> },
             ].map(({ name, color, icon, extra }) => (
               <div
                 key={name}
