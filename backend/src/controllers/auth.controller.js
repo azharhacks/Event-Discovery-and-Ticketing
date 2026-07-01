@@ -1,15 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { PrismaClient } = require('@prisma/client');
+const { sendOtpEmail } = require('../utils/email');
 
 const prisma = new PrismaClient();
 
-//register controller
 const register = async (req, res) => {
   try {
     const { fullName, email, password, phone, role } = req.body;
 
-    // Validate required fields
     if (!fullName || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -17,7 +17,6 @@ const register = async (req, res) => {
       });
     }
 
-    // Check if email already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return res.status(409).json({
@@ -26,15 +25,12 @@ const register = async (req, res) => {
       });
     }
 
-    // Hash the password
     const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Determine role (only ATTENDEE or ORGANIZER allowed on self-register)
     const allowedRoles = ['ATTENDEE', 'ORGANIZER'];
     const assignedRole = role && allowedRoles.includes(role) ? role : 'ATTENDEE';
 
-    // Create the user
     const user = await prisma.user.create({
       data: {
         fullName,
@@ -68,8 +64,7 @@ const register = async (req, res) => {
   }
 };
 
-
-//login controller
+// Step 1 — validate credentials, generate & send OTP (no token yet)
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -81,52 +76,93 @@ const login = async (req, res) => {
       });
     }
 
-    // Find user by email
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password.',
-      });
+      return res.status(401).json({ success: false, message: 'Invalid email or password.' });
     }
 
-    // Compare passwords
     const isMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password.',
-      });
+      return res.status(401).json({ success: false, message: 'Invalid email or password.' });
     }
 
-    // Generate JWT
+    // Invalidate any previous unused OTPs for this user
+    await prisma.otpCode.updateMany({
+      where: { userId: user.id, used: false },
+      data: { used: true },
+    });
+
+    // Generate 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    await prisma.otpCode.create({
+      data: { userId: user.id, code: otp, expiresAt },
+    });
+
+    await sendOtpEmail(user.email, otp);
+
+    return res.status(200).json({
+      success: true,
+      requiresOtp: true,
+      message: 'Verification code sent to your email.',
+      userId: user.id,
+    });
+  } catch (error) {
+    console.error('[login]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
+// Step 2 — verify OTP, issue JWT
+const verifyOtp = async (req, res) => {
+  try {
+    const { userId, code } = req.body;
+
+    if (!userId || !code) {
+      return res.status(400).json({ success: false, message: 'userId and code are required.' });
+    }
+
+    const otpRecord = await prisma.otpCode.findFirst({
+      where: {
+        userId,
+        code,
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+    });
+
+    if (!otpRecord) {
+      return res.status(401).json({ success: false, message: 'Invalid or expired code.' });
+    }
+
+    // Mark OTP as used
+    await prisma.otpCode.update({
+      where: { id: otpRecord.id },
+      data: { used: true },
+    });
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, fullName: true, email: true, phone: true, role: true, verified: true },
+    });
+
     const token = jwt.sign(
       { id: user.id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );
 
-    // Return token and sanitised user
     return res.status(200).json({
       success: true,
       message: 'Login successful.',
       token,
-      data: {
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        verified: user.verified,
-      },
+      data: user,
     });
   } catch (error) {
-    console.error('[login]', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Internal server error. Please try again later.',
-    });
+    console.error('[verifyOtp]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
   }
 };
 
-module.exports = { register, login };
+module.exports = { register, login, verifyOtp };

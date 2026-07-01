@@ -72,7 +72,7 @@ export default function AdminDashboard() {
   };
 
   const fmtDate  = (ds) => ds ? new Date(ds).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "";
-  const fmtPrice = (p)  => Number(p) === 0 ? "FREE" : "KES " + Number(p).toLocaleString();
+  const fmtPrice = (p)  => Number(p) === 0 ? "0" : "KES " + Number(p).toLocaleString();
 
   const handleStatusChange = async (eventId, status) => {
     setUpdating(eventId);
@@ -94,19 +94,19 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: "36px 20px 80px" }}>
+        <div className="container" style={{ padding: "30px 10px 40px" }}>
           {/* Stats */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 32 }}>
-            <StatCard label="Total Events"   value={events.length}                                                         color="#128C6B" />
-            <StatCard label="Pending Review" value={events.filter((e) => e.status === "PENDING").length}                   color="#d97706" />
-            <StatCard label="Approved"       value={events.filter((e) => e.status === "APPROVED").length}                  color="#0E7257" />
-            <StatCard label="Total Users"    value={users.length}                                                          color="#9C6B1F" />
-            <StatCard label="Transactions"   value={transactions.length}                                                   color="#0F7A75" />
+            <StatCard label="Total Events :"   value={events.length}                                                         color="black" />
+            <StatCard label="Pending Review :" value={events.filter((e) => e.status === "PENDING").length}                   color="black" />
+            <StatCard label="Approved Events :"       value={events.filter((e) => e.status === "APPROVED").length}                  color="black" />
+            <StatCard label="Total Users :"    value={users.length}                                                          color="black" />
+            <StatCard label="Transactions :"   value={transactions.length}                                                   color="black" />
             <StatCard label="Total Revenue"  value={"KES " + transactions.filter(t => t.status === "CONFIRMED").reduce((s, t) => s + Number(t.totalAmount), 0).toLocaleString()} color="#B38A36" />
           </div>
 
           {/* Tabs */}
-          <div style={{ display: "flex", gap: 4, background: "#F1EFE4", borderRadius: 8, padding: 4, marginBottom: 24, width: "fit-content" }}>
+          <div style={{ display: "flex", gap: 10, background: "#F1EFE4", borderRadius: 8, padding: 4, marginBottom: 24, width: "fit-content" }}>
             {["Events", "Users", "Transactions", "Reports"].map((tab) => (
               <button key={tab} onClick={() => setActiveTab(tab)}
                 style={{ padding: "8px 24px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "inherit",

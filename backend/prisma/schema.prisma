@@ -70,10 +70,24 @@ model User {
   createdAt      DateTime @default(now())
 
   // Relations
-  events  Event[]  // Events organised by this user
-  orders  Order[]  // Orders placed by this user as attendee
+  events   Event[]    // Events organised by this user
+  orders   Order[]    // Orders placed by this user as attendee
+  otpCodes OtpCode[]
 
   @@map("users")
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  userId    String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("otp_codes")
 }
 
 model Category {

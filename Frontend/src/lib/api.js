@@ -15,8 +15,9 @@ async function request(path, options = {}) {
   return data;
 }
 
-export const loginUser    = (body) => request('/auth/login',    { method: 'POST', body: JSON.stringify(body) });
-export const registerUser = (body) => request('/auth/register', { method: 'POST', body: JSON.stringify(body) });
+export const loginUser    = (body) => request('/auth/login',      { method: 'POST', body: JSON.stringify(body) });
+export const registerUser = (body) => request('/auth/register',   { method: 'POST', body: JSON.stringify(body) });
+export const verifyOtp    = (body) => request('/auth/verify-otp', { method: 'POST', body: JSON.stringify(body) });
 
 export const getEvents = (params = {}) => {
   const qs = new URLSearchParams(
