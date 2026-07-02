@@ -15,8 +15,9 @@ async function request(path, options = {}) {
   return data;
 }
 
-export const loginUser    = (body) => request('/auth/login',    { method: 'POST', body: JSON.stringify(body) });
-export const registerUser = (body) => request('/auth/register', { method: 'POST', body: JSON.stringify(body) });
+export const loginUser    = (body) => request('/auth/login',      { method: 'POST', body: JSON.stringify(body) });
+export const registerUser = (body) => request('/auth/register',   { method: 'POST', body: JSON.stringify(body) });
+export const verifyOtp    = (body) => request('/auth/verify-otp', { method: 'POST', body: JSON.stringify(body) });
 
 export const getEvents = (params = {}) => {
   const qs = new URLSearchParams(
@@ -33,6 +34,7 @@ export const getEventAttendees = (id) => request(`/events/${id}/attendees`);
 export const getOrganizerEvents = () => request('/events/organizer/my-events');
 export const getPendingEvents = () => request('/events/admin/pending');
 export const getAdminEvents  = () => request('/events/admin/all');
+export const getOrganizerSalesReport = () => request('/events/admin/report');
 export const getAllUsers      = () => request('/users/all');
 export const updateUserStatus = (id, body) => request(`/users/${id}/status`, { method: 'PATCH', body: JSON.stringify(body) });
 export const removeUser       = (id) => request(`/users/${id}`, { method: 'DELETE' });
@@ -50,7 +52,6 @@ export const getCheckoutOptions = () => request('/orders/checkout-options');
 export const confirmFreeOrder = (id) => request(`/orders/${id}/confirm-free`, { method: 'POST' });
 export const demoPayOrder = (id) => request(`/orders/${id}/demo-pay`, { method: 'POST' });
 export const getAdminTransactions = () => request('/orders/admin/all');
-export const getOrderQr = (id) => request(`/orders/${id}/qr`);
 
 // Payments (admin escrow)
 export const getPaymentLedger = () => request('/payments/admin/ledger');

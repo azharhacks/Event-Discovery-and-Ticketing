@@ -3,10 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import EventFilters from '../../components/event/EventFilters';
-import EventCard from '../../components/event/EventCard';
+import EventCardFull from '../../components/event/EventCardFull';
 import Pagination from '../../components/ui/Pagination';
 import EmptyState from '../../components/ui/EmptyState';
-import Skeleton from '../../components/ui/Skeleton';
 import { getEvents } from '../../lib/api';
 import { useDebounce } from '../../hooks/useDebounce';
 
@@ -151,21 +150,14 @@ export default function EventsPage() {
             {loading ? (
               <div className="events-grid-2">
                 {Array(6).fill(0).map((_, i) => (
-                  <div className="event-card" key={i}>
-                    <Skeleton height={190} />
-                    <div className="event-card-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      <Skeleton height={12} width="60%" />
-                      <Skeleton height={18} width="85%" />
-                      <Skeleton height={12} width="70%" />
-                    </div>
-                  </div>
+                  <div key={i} className="skeleton" style={{ borderRadius: 18, height: 300 }} />
                 ))}
               </div>
             ) : pageEvents.length === 0 ? (
               <div className="events-grid-2"><EmptyState /></div>
             ) : (
               <div className="events-grid-2">
-                {pageEvents.map((ev, i) => <EventCard key={ev.id} event={ev} index={i} />)}
+                {pageEvents.map((ev, i) => <EventCardFull key={ev.id} event={ev} index={i} />)}
               </div>
             )}
 

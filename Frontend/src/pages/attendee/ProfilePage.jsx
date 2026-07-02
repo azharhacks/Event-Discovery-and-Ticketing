@@ -42,11 +42,11 @@ export default function ProfilePage() {
 
   const initials = (profile?.fullName || 'U').split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
   const roleColors = {
-    ADMIN: { bg: '#FEE2E2', color: '#DC2626' },
-    ORGANIZER: { bg: '#EDE9FE', color: '#7C3AED' },
-    ATTENDEE: { bg: '#DBEAFE', color: '#2563EB' },
+    ADMIN:     { bg: 'transparent', color: '#dc2626' },
+    ORGANIZER: { bg: 'transparent', color: '#9C6B1F' },
+    ATTENDEE:  { bg: 'transparent', color: '#128C6B' },
   };
-  const rc = roleColors[profile?.role] || { bg: '#F3F4F6', color: '#6B7280' };
+  const rc = roleColors[profile?.role] || { bg: 'transparent', color: '#66766C' };
   const fs = {
     width: '100%', padding: '12px 14px',
     borderRadius: 'var(--radius-sm)', border: '1.5px solid var(--border)',
@@ -61,7 +61,7 @@ export default function ProfilePage() {
   return (
     <>
       <Navbar />
-      <div style={{ background: 'linear-gradient(135deg,var(--primary) 0%,#1a2d60 100%)', padding: '40px 0' }}>
+      <div style={{ background: 'linear-gradient(135deg,var(--primary) 0%,#0E5A43 100%)', padding: '40px 0' }}>
         <div className="container">
           <h1 style={{ color: '#fff', fontSize: '28px', fontWeight: 800 }}>My Profile</h1>
           <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: '14px', marginTop: '4px' }}>Manage your account details</p>
@@ -83,7 +83,7 @@ export default function ProfilePage() {
             }}>
               <div style={{
                 width: '72px', height: '72px', borderRadius: '50%',
-                background: 'linear-gradient(135deg,var(--primary),#1a2d60)',
+                background: 'linear-gradient(135deg,var(--primary),#0E5A43)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: '#fff', fontWeight: 800, fontSize: '24px', flexShrink: 0,
               }}>{initials}</div>
@@ -101,10 +101,10 @@ export default function ProfilePage() {
               <div style={{ background: '#fff', border: '1.5px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '28px', boxShadow: 'var(--shadow-sm)' }}>
                 <h3 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--primary)', marginBottom: '20px' }}>Edit Information</h3>
                 {error && (
-                  <div style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: 'var(--radius-sm)', padding: '12px 16px', color: '#EF4444', fontSize: '14px', marginBottom: '20px' }}>{error}</div>
+                  <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 'var(--radius-sm)', padding: '12px 16px', color: '#ef4444', fontSize: '14px', marginBottom: '20px' }}>{error}</div>
                 )}
                 {success && (
-                  <div style={{ background: '#D1FAE5', border: '1px solid #6EE7B7', borderRadius: 'var(--radius-sm)', padding: '12px 16px', color: '#059669', fontSize: '14px', marginBottom: '20px' }}>Profile updated successfully!</div>
+                  <div style={{ background: '#E8F5EE', border: '1px solid #A7DDC4', borderRadius: 'var(--radius-sm)', padding: '12px 16px', color: '#0E7257', fontSize: '14px', marginBottom: '20px' }}>Profile updated successfully!</div>
                 )}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginBottom: '24px' }}>
                   <div>

@@ -42,14 +42,14 @@ export default function MyTicketsPage() {
   const fmtPrice = (p) => (Number(p) === 0 ? "FREE" : "KES " + Number(p).toLocaleString());
 
   const statusStyle = (status) => {
-    const m = { CONFIRMED: { bg: "#D1FAE5", color: "#059669" }, PENDING: { bg: "#FEF3C7", color: "#D97706" }, REFUNDED: { bg: "#F3F4F6", color: "#6B7280" }, FAILED: { bg: "#FEE2E2", color: "#DC2626" } };
-    return m[status] || { bg: "#F3F4F6", color: "#6B7280" };
+    const m = { CONFIRMED: { bg: "transparent", color: "#A7DDC4" }, PENDING: { bg: "#fff", color: "#4F46E5" }, REFUNDED: { bg: "transparent", color: "rgba(255,255,255,0.5)" }, FAILED: { bg: "transparent", color: "#FCA5A5" } };
+    return m[status] || { bg: "transparent", color: "rgba(255,255,255,0.5)" };
   };
 
   return (
     <>
       <Navbar />
-      <div style={{ background: "linear-gradient(135deg,var(--primary) 0%,#1a2d60 100%)", padding: "40px 0" }}>
+      <div style={{ background: "linear-gradient(135deg,var(--primary) 0%,#0E5A43 100%)", padding: "40px 0" }}>
         <div className="container">
           <h1 style={{ color: "#fff", fontSize: "28px", fontWeight: 800 }}>My Tickets</h1>
           <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "14px", marginTop: "4px" }}>Your confirmed event tickets and QR codes</p>
@@ -63,7 +63,7 @@ export default function MyTicketsPage() {
           </div>
         ) : tickets.length === 0 ? (
           <div style={{ textAlign: "center", padding: "80px 0" }}>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, color: "#cbd5e1" }}>
+            <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, color: "#C9C2AC" }}>
               <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
                 <path d="M13 5v14"/>
@@ -80,7 +80,7 @@ export default function MyTicketsPage() {
               const ss = statusStyle(order.status);
               return (
                 <div key={order.id} className="fade-up event-card" onClick={() => setActiveTicket(order)} style={{ overflow: "hidden", cursor: "pointer" }}>
-                  <div style={{ background: "linear-gradient(135deg,var(--primary) 0%,#1a2d60 100%)", padding: "20px 22px" }}>
+                  <div style={{ background: "linear-gradient(135deg,var(--primary) 0%,#0E5A43 100%)", padding: "20px 22px" }}>
                     <div style={{ display: "inline-block", padding: "3px 10px", borderRadius: "999px", fontSize: "11px", fontWeight: 700, background: ss.bg, color: ss.color, marginBottom: "8px" }}>{order.status}</div>
                     <h3 style={{ color: "#fff", fontWeight: 700, fontSize: "16px", lineHeight: 1.3 }}>{ev?.title || "Event"}</h3>
                   </div>

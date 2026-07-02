@@ -357,6 +357,77 @@ const getEventAttendees = async (req, res) => {
   }
 };
 
+// Admin only: sales report grouped by organizer -> events, with tickets sold & revenue
+const getOrganizerSalesReport = async (req, res) => {
+  try {
+    const events = await prisma.event.findMany({
+      include: {
+        organiser: { select: { id: true, fullName: true, email: true } },
+        category:  { select: { id: true, name: true } },
+        tickets: {
+          include: {
+            orders: { where: { status: 'CONFIRMED' }, select: { quantity: true, totalAmount: true } },
+          },
+        },
+      },
+      orderBy: { eventDate: 'desc' },
+    });
+
+    const organizerMap = new Map();
+
+    for (const event of events) {
+      const ticketsSold = event.tickets.reduce(
+        (sum, t) => sum + t.orders.reduce((s, o) => s + o.quantity, 0), 0
+      );
+      const salesGenerated = event.tickets.reduce(
+        (sum, t) => sum + t.orders.reduce((s, o) => s + Number(o.totalAmount), 0), 0
+      );
+
+      const orgId = event.organiser.id;
+      if (!organizerMap.has(orgId)) {
+        organizerMap.set(orgId, {
+          organizerId: orgId,
+          fullName: event.organiser.fullName,
+          email: event.organiser.email,
+          totalEvents: 0,
+          totalTicketsSold: 0,
+          totalSales: 0,
+          events: [],
+        });
+      }
+
+      const org = organizerMap.get(orgId);
+      org.totalEvents += 1;
+      org.totalTicketsSold += ticketsSold;
+      org.totalSales += salesGenerated;
+      org.events.push({
+        id: event.id,
+        title: event.title,
+        venue: event.venue,
+        eventDate: event.eventDate,
+        status: event.status,
+        category: event.category?.name || null,
+        ticketsSold,
+        salesGenerated,
+      });
+    }
+
+    const organizers = Array.from(organizerMap.values()).sort((a, b) => b.totalSales - a.totalSales);
+
+    const summary = {
+      totalOrganizers: organizers.length,
+      totalEvents: events.length,
+      totalTicketsSold: organizers.reduce((s, o) => s + o.totalTicketsSold, 0),
+      totalSales: organizers.reduce((s, o) => s + o.totalSales, 0),
+    };
+
+    return res.status(200).json({ success: true, data: { organizers, summary } });
+  } catch (error) {
+    console.error('[getOrganizerSalesReport]', error);
+    return res.status(500).json({ success: false, message: 'Internal server error.' });
+  }
+};
+
 module.exports = {
   getAllEvents,
   getEventById,
@@ -367,4 +438,5 @@ module.exports = {
   getOrganizerEvents,
   getAdminAllEvents,
   getEventAttendees,
+  getOrganizerSalesReport,
 };
