@@ -3,8 +3,6 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-
-//protect middleware
 const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -28,15 +26,15 @@ const protect = async (req, res, next) => {
       });
     }
 
-    // Fetch the user from DB to ensure they still exist
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
+    const user = await prisma.user.findFirst({
+      where: { id: decoded.id, deletedAt: null },
       select: {
         id: true,
         fullName: true,
         email: true,
         role: true,
         verified: true,
+        status: true,
       },
     });
 
@@ -44,6 +42,20 @@ const protect = async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: 'Unauthorized. User no longer exists.',
+      });
+    }
+
+    if (user.status === 'SUSPENDED') {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account has been suspended. Contact support for assistance.',
+      });
+    }
+
+    if (user.status === 'BANNED') {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account has been banned.',
       });
     }
 
@@ -55,8 +67,6 @@ const protect = async (req, res, next) => {
   }
 };
 
-
-//admin only middleware
 const adminOnly = (req, res, next) => {
   if (!req.user || req.user.role !== 'ADMIN') {
     return res.status(403).json({
@@ -67,8 +77,6 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
-
-//organizer only middleware
 const organizerOnly = (req, res, next) => {
   if (!req.user || (req.user.role !== 'ORGANIZER' && req.user.role !== 'ADMIN')) {
     return res.status(403).json({

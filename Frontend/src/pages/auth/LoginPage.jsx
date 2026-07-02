@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import AuthBrandPanel from '../../components/auth/AuthBrandPanel';
 import PasswordInput from '../../components/auth/PasswordInput';
 import { loginUser } from '../../lib/api';
@@ -12,13 +12,18 @@ export default function LoginPage() {
   const { login, isLoggedIn } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirect');
 
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [alert, setAlert]       = useState({ msg: '', type: '' });
   const [loading, setLoading]   = useState(false);
 
-  if (isLoggedIn) { navigate(ROUTES.HOME, { replace: true }); return null; }
+  if (isLoggedIn) {
+    navigate(redirectTo || ROUTES.HOME, { replace: true });
+    return null;
+  }
 
   const showAlert = (msg, type = 'error') => setAlert({ msg, type });
 
@@ -35,7 +40,7 @@ export default function LoginPage() {
       const res = await loginUser({ email, password });
       login(res.token, res.data);
       showAlert('Login successful! Redirecting...', 'success');
-      setTimeout(() => navigate(ROUTES.HOME), 900);
+      setTimeout(() => navigate(redirectTo || ROUTES.HOME), 900);
     } catch (err) {
       showAlert(err?.message || 'Login failed. Please try again.');
     } finally {

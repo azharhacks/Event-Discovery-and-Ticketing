@@ -11,7 +11,9 @@ const categoryRoutes = require('./routes/category.routes');
 const orderRoutes = require('./routes/order.routes');
 const ticketRoutes = require('./routes/ticket.routes');
 const userRoutes = require('./routes/user.routes');
+const paymentRoutes = require('./routes/payment.routes');
 const { seedCategories } = require('./utils/seed');
+const { startOrderCleanupJob } = require('./utils/orderCleanup');
 
 const app = express();
 
@@ -28,6 +30,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Health check
 app.get('/', (req, res) => {
@@ -54,6 +57,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {
   console.log(`✅  Server running on port ${PORT}`);
   await seedCategories();
+  startOrderCleanupJob();
 });
 
 module.exports = app;

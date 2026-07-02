@@ -34,6 +34,8 @@ export const getOrganizerEvents = () => request('/events/organizer/my-events');
 export const getPendingEvents = () => request('/events/admin/pending');
 export const getAdminEvents  = () => request('/events/admin/all');
 export const getAllUsers      = () => request('/users/all');
+export const updateUserStatus = (id, body) => request(`/users/${id}/status`, { method: 'PATCH', body: JSON.stringify(body) });
+export const removeUser       = (id) => request(`/users/${id}`, { method: 'DELETE' });
 export const updateEventStatus = (id, status) => request(`/events/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
 
 // Categories
@@ -43,7 +45,17 @@ export const getCategories = () => request('/categories');
 export const createOrder = (body) => request('/orders', { method: 'POST', body: JSON.stringify(body) });
 export const getMyTickets = () => request('/orders/my-tickets');
 export const getOrderStatus = (id) => request(`/orders/${id}/status`);
+export const getOrderQr = (id) => request(`/orders/${id}/qr`);
+export const getCheckoutOptions = () => request('/orders/checkout-options');
+export const confirmFreeOrder = (id) => request(`/orders/${id}/confirm-free`, { method: 'POST' });
+export const demoPayOrder = (id) => request(`/orders/${id}/demo-pay`, { method: 'POST' });
 export const getAdminTransactions = () => request('/orders/admin/all');
+export const getOrderQr = (id) => request(`/orders/${id}/qr`);
+
+// Payments (admin escrow)
+export const getPaymentLedger = () => request('/payments/admin/ledger');
+export const releaseEventPayout = (body) => request('/payments/admin/payout', { method: 'POST', body: JSON.stringify(body) });
+export const refundOrder = (body) => request('/payments/admin/refund', { method: 'POST', body: JSON.stringify(body) });
 
 // Payments
 export const initiateMpesaPay = (body) => request('/mpesa/pay', { method: 'POST', body: JSON.stringify(body) });

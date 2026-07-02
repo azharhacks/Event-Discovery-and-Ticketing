@@ -76,10 +76,13 @@ export default function Navbar() {
                   </div>
                   <div className="nav-dropdown-divider" />
                   {user?.role === 'ATTENDEE' && (
-                    <Link to={ROUTES.TICKETS} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                      My Tickets
+                    <Link to={ROUTES.DASHBOARD} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                      My Dashboard
                     </Link>
                   )}
+                  <Link to={ROUTES.TICKETS} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    My Tickets
+                  </Link>
                   {isOrganizer && (
                     <>
                       <Link to={ROUTES.ORGANIZER} className="nav-dropdown-item" onClick={() => setDropdownOpen(false)}>

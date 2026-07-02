@@ -44,12 +44,13 @@ export default function EventDetailPage() {
   };
 
   const handleCheckout = () => {
+    if (!selectedTicket) return;
+    const checkoutUrl = `/checkout?ticketId=${selectedTicket.id}&quantity=${quantity}`;
     if (!isLoggedIn) {
-      navigate(ROUTES.LOGIN + `?redirect=/events/${id}`);
+      navigate(`${ROUTES.LOGIN}?redirect=${encodeURIComponent(checkoutUrl)}`);
       return;
     }
-    if (!selectedTicket) return;
-    navigate(`/checkout?ticketId=${selectedTicket.id}&quantity=${quantity}`);
+    navigate(checkoutUrl);
   };
 
   if (loading) {

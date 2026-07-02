@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/layout/Footer";
+import QrDisplay from "../../components/ui/QrDisplay";
 import { getMyTickets } from "../../lib/api";
 import { ROUTES } from "../../config/routes";
+import QRCode from "qrcode";
 
 export default function MyTicketsPage() {
   const navigate = useNavigate();
@@ -18,18 +20,16 @@ export default function MyTicketsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDownload = async (qrToken, eventTitle) => {
-    const url = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${qrToken}`;
+  const handleDownload = async (qrPayload, eventTitle) => {
+    if (!qrPayload) return;
     try {
-      const res  = await fetch(url);
-      const blob = await res.blob();
+      const dataUrl = await QRCode.toDataURL(qrPayload, { width: 400, margin: 2 });
       const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
+      link.href = dataUrl;
       link.download = `hafla-ticket-${(eventTitle || 'qr').replace(/\s+/g, '-').toLowerCase()}.png`;
       link.click();
-      URL.revokeObjectURL(link.href);
     } catch {
-      window.open(url, '_blank');
+      alert('Could not download QR code.');
     }
   };
 
@@ -111,15 +111,15 @@ export default function MyTicketsPage() {
             <button onClick={() => setActiveTicket(null)} style={{ position: "absolute", top: 16, right: 16, background: "var(--light)", border: "none", borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer", fontSize: "18px" }}>×</button>
             <h3 style={{ fontWeight: 800, fontSize: "18px", color: "var(--primary)", marginBottom: "4px" }}>{activeTicket.ticket?.event?.title}</h3>
             <p style={{ color: "var(--muted)", fontSize: "13px", marginBottom: "24px" }}>{fmtDate(activeTicket.ticket?.event?.eventDate)} · {activeTicket.ticket?.event?.eventTime}</p>
-            {activeTicket.qrCode ? (
+            {activeTicket.qrPayload ? (
               <div style={{ marginBottom: "20px" }}>
                 <div style={{ background: "#fff", border: "2px solid var(--border)", borderRadius: "var(--radius-md)", padding: "12px", display: "inline-block" }}>
-                  <img src={"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + activeTicket.qrCode.qrToken} alt="Ticket QR Code" width="200" height="200" />
+                  <QrDisplay value={activeTicket.qrPayload} size={200} />
                 </div>
                 <div style={{ marginTop: "12px" }}>
                   <button
-                    onClick={() => handleDownload(activeTicket.qrCode.qrToken, activeTicket.ticket?.event?.title)}
-                    style={{ padding: "8px 20px", borderRadius: "8px", border: "1.5px solid var(--border)", background: "#fff", color: "var(--primary)", fontWeight: 600, fontSize: "13px", cursor: "pointer", fontFamily: "inherit", display: "inline-flex", alignItems: "center", gap: "6px" }}
+                    onClick={() => handleDownload(activeTicket.qrPayload, activeTicket.ticket?.event?.title)}
+                    style={{ padding: "8px 20px", borderRadius: "8px", border: "1.5px solid var(--border)", background: "#fff", color: "var(--primary)", fontWeight: 600, fontSize: "13px", cursor: "pointer", fontFamily: "inherit" }}
                   >
                     ↓ Download QR Code
                   </button>

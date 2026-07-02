@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import { createOrder, getOrderStatus, initiateMpesaPay } from '../../lib/api';
+import { createOrder, getOrderStatus, initiateMpesaPay, getCheckoutOptions, confirmFreeOrder, demoPayOrder } from '../../lib/api';
 import { ROUTES } from '../../config/routes';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -36,8 +36,16 @@ export default function CheckoutPage() {
   const [paymentStatus,  setPaymentStatus]  = useState('idle'); // idle | paying | polling | success | failed
   const [paymentMessage, setPaymentMessage] = useState('');
   const [error,          setError]          = useState(null);
+  const [demoPayments,   setDemoPayments]   = useState(false);
 
   const pollRef = useRef(null);
+  const isFreeOrder = order && Number(order.totalAmount) === 0;
+
+  useEffect(() => {
+    getCheckoutOptions()
+      .then((res) => setDemoPayments(!!res.data?.demoPayments))
+      .catch(() => setDemoPayments(true));
+  }, []);
 
   useEffect(() => {
     if (!ticketId || !quantity) {
@@ -102,7 +110,35 @@ export default function CheckoutPage() {
     }
   };
 
-  const fmtPrice = (p) => `KES ${Number(p).toLocaleString()}`;
+  const handleFreeTicket = async () => {
+    if (!order) return;
+    setCreating(true);
+    setPaymentMessage('');
+    try {
+      await confirmFreeOrder(order.id);
+      setPaymentStatus('success');
+    } catch (err) {
+      setPaymentMessage(err.message || 'Could not confirm free ticket.');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleDemoPay = async () => {
+    if (!order) return;
+    setCreating(true);
+    setPaymentMessage('');
+    try {
+      await demoPayOrder(order.id);
+      setPaymentStatus('success');
+    } catch (err) {
+      setPaymentMessage(err.message || 'Demo payment failed.');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const fmtPrice = (p) => Number(p) === 0 ? 'FREE' : `KES ${Number(p).toLocaleString()}`;
   const fmtDate  = (ds) => ds ? new Date(ds).toLocaleString('en', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
   /* ── Loading ── */
@@ -225,7 +261,34 @@ export default function CheckoutPage() {
 
               {/* Payment Section */}
               <div style={{ padding: '24px 28px' }}>
-                {(paymentStatus === 'idle' || paymentStatus === 'failed') && (
+                {isFreeOrder && paymentStatus !== 'success' && (
+                  <div>
+                    <p style={{ fontSize: 14, color: '#64748b', marginBottom: 20, lineHeight: 1.6 }}>
+                      This is a free event — no payment needed. Confirm to get your ticket and QR code instantly.
+                    </p>
+                    {paymentMessage && (
+                      <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 8, padding: '10px 14px', color: '#ef4444', fontSize: 13, marginBottom: 16 }}>
+                        {paymentMessage}
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      onClick={handleFreeTicket}
+                      disabled={creating}
+                      style={{
+                        width: '100%', padding: '14px',
+                        background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                        color: '#fff', border: 'none', borderRadius: 8,
+                        fontWeight: 700, fontSize: 15, cursor: 'pointer', fontFamily: 'inherit',
+                        opacity: creating ? 0.6 : 1,
+                      }}
+                    >
+                      {creating ? 'Confirming...' : 'Get Free Ticket'}
+                    </button>
+                  </div>
+                )}
+
+                {!isFreeOrder && (paymentStatus === 'idle' || paymentStatus === 'failed') && (
                   <form onSubmit={handlePay}>
                     <label style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: 8 }}>
                       M-Pesa Phone Number
@@ -286,10 +349,41 @@ export default function CheckoutPage() {
                     >
                       {creating ? 'Processing...' : `Pay ${fmtPrice(order.totalAmount)} via M-Pesa`}
                     </button>
+
+                    {demoPayments && (
+                      <>
+                        <div style={{ textAlign: 'center', margin: '16px 0', color: '#94a3b8', fontSize: 12, fontWeight: 600 }}>
+                          OR (for demo / testing)
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleDemoPay}
+                          disabled={creating}
+                          style={{
+                            width: '100%',
+                            padding: '12px',
+                            background: '#fff',
+                            color: '#2563eb',
+                            border: '2px solid #2563eb',
+                            borderRadius: 8,
+                            fontWeight: 700,
+                            fontSize: 14,
+                            cursor: 'pointer',
+                            fontFamily: 'inherit',
+                            opacity: creating ? 0.6 : 1,
+                          }}
+                        >
+                          {creating ? 'Processing...' : 'Simulate Payment (Demo)'}
+                        </button>
+                        <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 10, textAlign: 'center' }}>
+                          Use this when M-Pesa sandbox is not configured
+                        </p>
+                      </>
+                    )}
                   </form>
                 )}
 
-                {(paymentStatus === 'paying' || paymentStatus === 'polling') && (
+                {!isFreeOrder && (paymentStatus === 'paying' || paymentStatus === 'polling') && (
                   <div style={{ textAlign: 'center', padding: '24px 0' }}>
                     <div style={{
                       width: 44,

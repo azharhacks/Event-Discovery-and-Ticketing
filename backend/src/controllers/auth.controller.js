@@ -81,21 +81,33 @@ const login = async (req, res) => {
       });
     }
 
-    // Find user by email
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
+    if (!user || user.deletedAt) {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password.',
       });
     }
 
-    // Compare passwords
     const isMatch = await bcrypt.compare(password, user.hashedPassword);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password.',
+      });
+    }
+
+    if (user.status === 'SUSPENDED') {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account has been suspended. Contact support for assistance.',
+      });
+    }
+
+    if (user.status === 'BANNED') {
+      return res.status(403).json({
+        success: false,
+        message: 'Your account has been banned.',
       });
     }
 

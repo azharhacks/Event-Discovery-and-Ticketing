@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/layout/Footer";
 import { getOrganizerEvents, verifyTicket } from "../../lib/api";
+import QrScanner from "../../components/ui/QrScanner";
 import { ROUTES } from "../../config/routes";
 
 const btnSm = (bg, color) => ({
@@ -47,14 +48,14 @@ export default function OrganizerDashboard() {
     return sum + (sold > 0 ? sold : 0) * Number(ev.ticketPrice);
   }, 0);
 
-  const handleVerify = async (e) => {
-    e.preventDefault();
-    if (!qrInput.trim()) return;
+  const handleVerify = async (token) => {
+    const value = (token || qrInput).trim();
+    if (!value) return;
     setScanning(true);
     setScanResult(null);
     try {
-      const res = await verifyTicket(qrInput.trim());
-      setScanResult({ success: true, message: res.message || "Ticket verified.", attendee: res.data?.attendee || null, ticketType: res.data?.ticketType || "Regular" });
+      const res = await verifyTicket(value);
+      setScanResult({ success: true, message: res.message || "Ticket verified.", attendee: res.data?.attendee || null, ticketType: res.data?.ticketType || "Regular", quantity: res.data?.quantity });
       setQrInput("");
     } catch (err) {
       setScanResult({ success: false, message: err.message || "Invalid or already scanned ticket." });
@@ -148,9 +149,11 @@ export default function OrganizerDashboard() {
             {/* Ticket Verifier */}
             <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: 24, boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)" }}>
               <h3 style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", margin: "0 0 6px" }}>Ticket Verifier</h3>
-              <p style={{ fontSize: 13, color: "#64748b", margin: "0 0 20px", lineHeight: 1.5 }}>Scan or paste a ticket QR token to validate entry at the gate.</p>
+              <p style={{ fontSize: 13, color: "#64748b", margin: "0 0 16px", lineHeight: 1.5 }}>Scan a ticket QR code or paste the token below.</p>
 
-              <form onSubmit={handleVerify}>
+              <QrScanner onScan={(decoded) => handleVerify(decoded)} />
+
+              <form onSubmit={(e) => { e.preventDefault(); handleVerify(); }}>
                 <textarea value={qrInput} onChange={(e) => setQrInput(e.target.value)} placeholder="Paste QR token here..." required
                   style={{ width: "100%", padding: 12, borderRadius: 8, border: "1.5px solid #e2e8f0", outline: "none", fontSize: 13, fontFamily: "monospace", minHeight: 80, resize: "vertical", marginBottom: 12, background: "#f8fafc", boxSizing: "border-box" }} />
                 <button type="submit" disabled={scanning || !qrInput.trim()}
@@ -168,7 +171,8 @@ export default function OrganizerDashboard() {
                   {scanResult.success && scanResult.attendee && (
                     <div style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid #a7f3d0", fontSize: 12, color: "#475569" }}>
                       <div style={{ marginBottom: 3 }}><strong>Attendee:</strong> {scanResult.attendee.fullName || scanResult.attendee.email}</div>
-                      <div><strong>Tier:</strong> {scanResult.ticketType}</div>
+                      <div style={{ marginBottom: 3 }}><strong>Tier:</strong> {scanResult.ticketType}</div>
+                      {scanResult.quantity > 1 && <div><strong>Entries:</strong> x{scanResult.quantity}</div>}
                     </div>
                   )}
                 </div>
