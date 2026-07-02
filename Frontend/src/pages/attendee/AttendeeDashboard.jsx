@@ -27,15 +27,15 @@ export default function AttendeeDashboard() {
   const totalSpent   = tickets.reduce((sum, t) => sum + Number(t.totalAmount), 0);
 
   const stats = [
-    { label: 'Total Tickets',    value: loading ? '—' : tickets.length,  icon: '🎟️' },
-    { label: 'Upcoming Events',  value: loading ? '—' : upcoming.length, icon: '📅' },
-    { label: 'Total Spent',      value: loading ? '—' : fmt(totalSpent),  icon: '💳' },
+    { label: 'Total Tickets',    value: loading ? '—' : tickets.length,  },
+    { label: 'Upcoming Events',  value: loading ? '—' : upcoming.length,  },
+    { label: 'Total Spent',      value: loading ? '—' : fmt(totalSpent) },
   ];
 
   const quickLinks = [
-    { label: 'Browse Events',  icon: '🔍', route: ROUTES.EVENTS },
-    { label: 'My Tickets',     icon: '🎫', route: ROUTES.TICKETS },
-    { label: 'Profile',        icon: '👤', route: ROUTES.PROFILE },
+    { label: 'Browse Events',  route: ROUTES.EVENTS },
+    { label: 'My Tickets',      route: ROUTES.TICKETS },
+    { label: 'Profile',         route: ROUTES.PROFILE },
   ];
 
   return (
@@ -47,7 +47,7 @@ export default function AttendeeDashboard() {
         <div className="container">
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '14px', marginBottom: '6px' }}>Welcome back</p>
           <h1 style={{ color: '#fff', fontSize: '30px', fontWeight: 800, marginBottom: '4px' }}>
-            Hey, {firstName} 👋
+            Hey, {firstName} 
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '14px' }}>
             Here's what's happening with your events
