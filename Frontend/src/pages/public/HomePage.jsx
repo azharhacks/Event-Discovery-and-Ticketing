@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import EventGrid from '../../components/event/EventGrid';
+import FeaturedGrid from '../../components/event/FeaturedGrid';
 import EventCardCompact from '../../components/event/EventCardCompact';
 import { getEvents } from '../../lib/api';
 import { ROUTES } from '../../config/routes';
@@ -65,7 +65,7 @@ export default function HomePage() {
         <div className="container hero-inner">
           <p className="hero-eyebrow">Mombasa's #1 Ticketing Platform</p>
           <h1 className="hero-title">Discover Events<br />Around the Coast</h1>
-          <p className="hero-sub">From beach parties to cultural tours — find what's happening near you</p>
+          <p className="hero-sub"> CONCERTS,FOOD FAIRS, TECH SUMMITS AND MORE!!</p>
 
           <div className="search-bar">
             <div className="search-field">
@@ -95,19 +95,20 @@ export default function HomePage() {
             </div>
             <button className="hero-btn" onClick={handleSearch}>SEARCH</button>
           </div>
-
-          
         </div>
       </section>
 
       {/* Featured Events */}
-      <section className="section" style={{ background: '#fff' }}>
+      <section className="section" style={{ background: 'var(--bg)' }}>
         <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Featured Events</h2>
+          <div className="section-header" style={{ alignItems: 'flex-end' }}>
+            <div>
+              <h2 className="section-title">Featured Events</h2>
+              <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>Hand-picked from what's on around the coast</p>
+            </div>
             <a href={ROUTES.EVENTS} className="see-all">See all →</a>
           </div>
-          <EventGrid events={featured} loading={loading} />
+          <FeaturedGrid events={featured} loading={loading} />
         </div>
       </section>
 
@@ -119,10 +120,10 @@ export default function HomePage() {
           </div>
           <div className="categories-grid">
             {[
-              { name: 'Music',   color: '#C9A24B', icon: <path d="M9 18V5l12-2v13"/>, extra: <><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></> },
-              { name: 'Food',    color: '#128C6B', icon: <><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></> },
-              { name: 'Sports',  color: '#0F7A75', icon: <><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93 19.07 19.07"/><path d="M4.93 19.07 19.07 4.93"/></> },
-              { name: 'Culture', color: '#9C6B1F', icon: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></> },
+              { name: 'Music',   color: 'indigo', icon: <path d="M9 18V5l12-2v13"/>, extra: <><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></> },
+              { name: 'Food',    color: 'indigo', icon: <><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></> },
+              { name: 'Sports',  color: 'indigo', icon: <><circle cx="12" cy="12" r="10"/><path d="M4.93 4.93 19.07 19.07"/><path d="M4.93 19.07 19.07 4.93"/></> },
+              { name: 'Culture', color: 'indigo', icon: <><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></> },
             ].map(({ name, color, icon, extra }) => (
               <div
                 key={name}
@@ -151,7 +152,7 @@ export default function HomePage() {
           <div className="upcoming-list">
             {upcoming.map((ev, i) => <EventCardCompact key={ev.id} event={ev} index={i} />)}
           </div>
-          <div className="load-more-wrap" style={{ marginTop: 28 }}>
+          <div style={{ marginTop: 28 }}>
             <button className="btn btn-outline" onClick={() => navigate(ROUTES.EVENTS)}>
               Load more events
             </button>

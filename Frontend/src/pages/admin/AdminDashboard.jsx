@@ -4,16 +4,16 @@ import Footer from "../../components/layout/Footer";
 import { getAdminEvents, getAllUsers, updateEventStatus, getAdminTransactions, getOrganizerSalesReport } from "../../lib/api";
 
 const STATUS_STYLES = {
-  APPROVED:  { bg: "#E8F5EE", color: "#0E7257", border: "#A7DDC4" },
-  PENDING:   { bg: "#fffbeb", color: "#b45309", border: "#fde68a" },
-  REJECTED:  { bg: "#fef2f2", color: "#b91c1c", border: "#fca5a5" },
-  CANCELLED: { bg: "#FAF8F3", color: "#4A5950", border: "#E3DFD2" },
+  APPROVED:  { bg: "transparent", color: "#0E7257", border: "transparent" },
+  PENDING:   { bg: "#fff",        color: "#4F46E5", border: "#c7d2fe" },
+  REJECTED:  { bg: "transparent", color: "#b91c1c", border: "transparent" },
+  CANCELLED: { bg: "transparent", color: "#4A5950", border: "transparent" },
 };
 
 const ROLE_STYLES = {
-  ADMIN:     { bg: "#fef2f2", color: "#dc2626", border: "#fca5a5" },
-  ORGANIZER: { bg: "#FBF3E3", color: "#9C6B1F", border: "#E8D3A0" },
-  ATTENDEE:  { bg: "#E3F3F1", color: "#128C6B", border: "#BFE3DF" },
+  ADMIN:     { bg: "transparent", color: "#dc2626", border: "transparent" },
+  ORGANIZER: { bg: "transparent", color: "#9C6B1F", border: "transparent" },
+  ATTENDEE:  { bg: "transparent", color: "#128C6B", border: "transparent" },
 };
 
 const StatCard = ({ label, value, color }) => (
@@ -169,7 +169,7 @@ export default function AdminDashboard() {
               {users.length === 0 ? (
                 <div style={{ padding: "60px 24px", textAlign: "center", color: "#66766C" }}>No users registered yet.</div>
               ) : users.map((u) => {
-                const rs = ROLE_STYLES[u.role] || { bg: "#FAF8F3", color: "#4A5950", border: "#E3DFD2" };
+                const rs = ROLE_STYLES[u.role] || { bg: "transparent", color: "#4A5950", border: "transparent" };
                 const initials = (u.fullName || "U").split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
                 return (
                   <div key={u.id} style={{ padding: "14px 24px", borderBottom: "1px solid #F1EFE4", display: "flex", alignItems: "center", gap: 14 }}>
@@ -208,8 +208,8 @@ export default function AdminDashboard() {
                   {transactions.map((tx) => {
                     const isPaid    = tx.status === "CONFIRMED";
                     const isFailed  = tx.status === "FAILED";
-                    const statusBg  = isPaid ? "#E8F5EE" : isFailed ? "#fef2f2" : "#fffbeb";
-                    const statusClr = isPaid ? "#0E7257" : isFailed ? "#b91c1c" : "#b45309";
+                    const statusBg  = isPaid ? "transparent" : isFailed ? "transparent" : "#fff";
+                    const statusClr = isPaid ? "#0E7257"    : isFailed ? "#b91c1c"    : "#4F46E5";
                     return (
                       <div key={tx.id} style={{ display: "grid", gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 1fr", gap: 8, padding: "13px 24px", borderBottom: "1px solid #F1EFE4", alignItems: "center" }}>
                         <div>
@@ -262,9 +262,9 @@ export default function AdminDashboard() {
                 <>
                   {/* Summary */}
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 24 }}>
-                    <StatCard label="Organizers"     value={report.summary.totalOrganizers}              color="#9C6B1F" />
-                    <StatCard label="Events"         value={report.summary.totalEvents}                  color="#128C6B" />
-                    <StatCard label="Tickets Sold"   value={report.summary.totalTicketsSold}              color="#0F7A75" />
+                    <StatCard label="Organizers"     value={report.summary.totalOrganizers}              color="black" />
+                    <StatCard label="Events"         value={report.summary.totalEvents}                  color="black" />
+                    <StatCard label="Tickets Sold"   value={report.summary.totalTicketsSold}              color="black" />
                     <StatCard label="Total Sales"    value={"KES " + report.summary.totalSales.toLocaleString()} color="#B38A36" />
                   </div>
 
@@ -278,9 +278,9 @@ export default function AdminDashboard() {
                             <div style={{ fontSize: 12, color: "#66766C" }}>{org.email}</div>
                           </div>
                           <div style={{ display: "flex", gap: 20, fontSize: 12, color: "#66766C" }}>
-                            <span><strong style={{ color: "#0B3D2E" }}>{org.totalEvents}</strong> event(s)</span>
-                            <span><strong style={{ color: "#0F7A75" }}>{org.totalTicketsSold}</strong> sold</span>
-                            <span><strong style={{ color: "#B38A36" }}>KES {org.totalSales.toLocaleString()}</strong> revenue</span>
+                            <span><strong style={{ color: "black" }}>{org.totalEvents}</strong> event(s)</span>
+                            <span><strong style={{ color: "black" }}>{org.totalTicketsSold}</strong> sold</span>
+                            <span><strong style={{ color: "black" }}>KES {org.totalSales.toLocaleString()}</strong> revenue</span>
                           </div>
                         </div>
 

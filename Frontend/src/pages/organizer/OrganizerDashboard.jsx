@@ -6,21 +6,21 @@ import { getOrganizerEvents, verifyTicket } from "../../lib/api";
 import { ROUTES } from "../../config/routes";
 
 const btnSm = (bg, color) => ({
-  padding: "4px 10px", borderRadius: 6, border: "none", background: bg, color,
+  padding: "4px 10px", borderRadius: 6, border: `1px solid ${color}`, background: bg, color,
   cursor: "pointer", fontWeight: 600, fontSize: 11, fontFamily: "inherit",
 });
 
 const STATUS_STYLES = {
-  APPROVED:  { bg: "#E8F5EE", color: "#0E7257", border: "#A7DDC4" },
-  PENDING:   { bg: "#fffbeb", color: "#b45309", border: "#fde68a" },
-  REJECTED:  { bg: "#fef2f2", color: "#b91c1c", border: "#fca5a5" },
-  CANCELLED: { bg: "#FAF8F3", color: "#4A5950", border: "#E3DFD2" },
+  APPROVED:  { bg: "transparent", color: "#0E7257", border: "transparent" },
+  PENDING:   { bg: "#fff",        color: "#4F46E5", border: "white" },
+  REJECTED:  { bg: "transparent", color: "#b91c1c", border: "transparent" },
+  CANCELLED: { bg: "transparent", color: "#4A5950", border: "transparent" },
 };
 
 const StatCard = ({ label, value, color }) => (
-  <div style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", display: "flex", flexDirection: "column", gap: 4 }}>
+  <div style={{ background: "#fff", border: "1px solid #E3DFD2", borderRadius: 12, padding: "16px 24px", boxShadow: "0 1px 3px rgb(0 0 0 / 0.04)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flex: 1 }}>
     <span style={{ fontSize: 13, color: "#66766C", fontWeight: 500 }}>{label}</span>
-    <span style={{ fontSize: 24, fontWeight: 800, color: color || "#0B3D2E" }}>{value}</span>
+    <span style={{ fontSize: 20, fontWeight: 800, color: color || "#0B3D2E" }}>{value}</span>
   </div>
 );
 
@@ -80,13 +80,13 @@ export default function OrganizerDashboard() {
           </div>
         </div>
 
-        <div className="container" style={{ padding: "36px 20px 80px" }}>
+        <div className="container" style={{ padding: "30px 20px 50px" }}>
           {/* Stats */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 32 }}>
-            <StatCard label="Total Events"   value={events.length}                                          color="#128C6B" />
-            <StatCard label="Approved"       value={events.filter((e) => e.status === "APPROVED").length}   color="#0E7257" />
-            <StatCard label="Pending Review" value={events.filter((e) => e.status === "PENDING").length}    color="#d97706" />
-            <StatCard label="Est. Revenue"   value={"KES " + totalRevenue.toLocaleString()}                 color="#0F7A75" />
+          <div style={{ display: "flex", gap: 16, marginBottom: 32 }}>
+            <StatCard label="Total Events :"   value={events.length}                                          color="black" />
+            <StatCard label="Approved :"       value={events.filter((e) => e.status === "APPROVED").length}   color="black" />
+            <StatCard label="Pending Review :" value={events.filter((e) => e.status === "PENDING").length}    color="black" />
+            <StatCard label="Est. Revenue :"   value={"KES " + totalRevenue.toLocaleString()}                 color="#0F7A75" />
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 24, alignItems: "start" }}>
@@ -121,7 +121,7 @@ export default function OrganizerDashboard() {
                       {ev.status}
                     </span>
                     <div style={{ textAlign: "right", minWidth: 80 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: "#128C6B" }}>{fmtPrice(ev.ticketPrice)}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: "black" }}>{fmtPrice(ev.ticketPrice)}</div>
                       {(() => {
                         const avail = ev.tickets?.[0]?.quantityAvailable ?? ev.capacity;
                         const sold  = ev.capacity - avail;
@@ -133,10 +133,10 @@ export default function OrganizerDashboard() {
                       })()}
                     </div>
                     <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                      <button onClick={() => navigate(ROUTES.ORGANIZER_EDIT(ev.id))} style={btnSm("#E3F3F1", "#128C6B")}>
+                      <button onClick={() => navigate(ROUTES.ORGANIZER_EDIT(ev.id))} style={btnSm("transparent", "#128C6B")}>
                         Edit
                       </button>
-                      <button onClick={() => navigate(ROUTES.ORGANIZER_ATTENDEES(ev.id))} style={btnSm("#E8F5EE", "#0E7257")}>
+                      <button onClick={() => navigate(ROUTES.ORGANIZER_ATTENDEES(ev.id))} style={btnSm("transparent", "#0E7257")}>
                         Attendees
                       </button>
                     </div>

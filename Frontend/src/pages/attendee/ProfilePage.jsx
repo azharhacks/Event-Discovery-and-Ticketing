@@ -42,11 +42,11 @@ export default function ProfilePage() {
 
   const initials = (profile?.fullName || 'U').split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2);
   const roleColors = {
-    ADMIN: { bg: '#fef2f2', color: '#dc2626' },
-    ORGANIZER: { bg: '#FBF3E3', color: '#9C6B1F' },
-    ATTENDEE: { bg: '#D3ECDF', color: '#128C6B' },
+    ADMIN:     { bg: 'transparent', color: '#dc2626' },
+    ORGANIZER: { bg: 'transparent', color: '#9C6B1F' },
+    ATTENDEE:  { bg: 'transparent', color: '#128C6B' },
   };
-  const rc = roleColors[profile?.role] || { bg: '#F1EFE4', color: '#66766C' };
+  const rc = roleColors[profile?.role] || { bg: 'transparent', color: '#66766C' };
   const fs = {
     width: '100%', padding: '12px 14px',
     borderRadius: 'var(--radius-sm)', border: '1.5px solid var(--border)',

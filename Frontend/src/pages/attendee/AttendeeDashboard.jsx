@@ -131,7 +131,7 @@ export default function AttendeeDashboard() {
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
                       <div style={{ fontWeight: 700, fontSize: '14px', color: 'var(--accent)' }}>{fmt(order.totalAmount)}</div>
-                      <div style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', marginTop: '4px', background: isConfirmed ? '#E8F5EE' : '#FBF3E3', color: isConfirmed ? '#0E7257' : '#B38A36' }}>
+                      <div style={{ fontSize: '11px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', marginTop: '4px', background: isConfirmed ? 'transparent' : '#fff', border: isConfirmed ? 'none' : '1px solid #c7d2fe', color: isConfirmed ? '#0E7257' : '#4F46E5' }}>
                         {order.status}
                       </div>
                     </div>

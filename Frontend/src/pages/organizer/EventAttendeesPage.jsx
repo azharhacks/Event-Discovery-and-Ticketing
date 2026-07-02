@@ -131,7 +131,7 @@ export default function EventAttendeesPage() {
                           {order.attendee?.email || "—"}
                         </div>
                         <div>
-                          <span style={{ display: "inline-flex", padding: "3px 8px", borderRadius: 9999, fontSize: 11, fontWeight: 700, background: "#E3F3F1", color: "#128C6B", border: "1px solid #BFE3DF" }}>
+                          <span style={{ display: "inline-flex", padding: "3px 8px", borderRadius: 9999, fontSize: 11, fontWeight: 700, background: "transparent", color: "#128C6B" }}>
                             {order.ticket?.ticketType || "REGULAR"}
                           </span>
                         </div>

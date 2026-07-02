@@ -42,8 +42,8 @@ export default function MyTicketsPage() {
   const fmtPrice = (p) => (Number(p) === 0 ? "FREE" : "KES " + Number(p).toLocaleString());
 
   const statusStyle = (status) => {
-    const m = { CONFIRMED: { bg: "#E8F5EE", color: "#0E7257" }, PENDING: { bg: "#FBF3E3", color: "#B38A36" }, REFUNDED: { bg: "#F1EFE4", color: "#66766C" }, FAILED: { bg: "#fef2f2", color: "#b91c1c" } };
-    return m[status] || { bg: "#F1EFE4", color: "#66766C" };
+    const m = { CONFIRMED: { bg: "transparent", color: "#A7DDC4" }, PENDING: { bg: "#fff", color: "#4F46E5" }, REFUNDED: { bg: "transparent", color: "rgba(255,255,255,0.5)" }, FAILED: { bg: "transparent", color: "#FCA5A5" } };
+    return m[status] || { bg: "transparent", color: "rgba(255,255,255,0.5)" };
   };
 
   return (
