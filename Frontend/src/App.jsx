@@ -9,6 +9,7 @@ import EventsPage      from "./pages/public/EventsPage";
 import EventDetailPage from "./pages/public/EventDetailPage";
 import LoginPage       from "./pages/auth/LoginPage";
 import SignupPage      from "./pages/auth/SignupPage";
+import HelpPage        from "./pages/public/HelpPage";
 
 // Attendee / shared protected pages
 import AttendeeDashboard from "./pages/attendee/AttendeeDashboard";
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/events/:id"   element={<EventDetailPage />} />
             <Route path={ROUTES.LOGIN}  element={<LoginPage />} />
             <Route path={ROUTES.SIGNUP} element={<SignupPage />} />
+            <Route path={ROUTES.HELP}   element={<HelpPage />} />
 
             {/* ── Any logged-in user ─────────────────── */}
             <Route element={<ProtectedRoute />}>

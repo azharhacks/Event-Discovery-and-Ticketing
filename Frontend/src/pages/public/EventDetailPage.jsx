@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import { getEvent } from '../../lib/api';
+import { getEventImageUrl } from '../../lib/images';
 import { ROUTES } from '../../config/routes';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -94,6 +95,7 @@ export default function EventDetailPage() {
   }
 
   const isSoldOut = selectedTicket && selectedTicket.quantityAvailable <= 0;
+  const bannerImage = getEventImageUrl(event);
 
   return (
     <>
@@ -165,9 +167,9 @@ export default function EventDetailPage() {
             background: 'var(--primary)'
           }}
         >
-          {event.bannerUrl ? (
+          {bannerImage ? (
             <img 
-              src={event.bannerUrl} 
+              src={bannerImage} 
               alt={event.title} 
               style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
             />

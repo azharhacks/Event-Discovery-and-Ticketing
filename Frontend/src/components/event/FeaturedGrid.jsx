@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { formatKES, formatDate } from '../../lib/utils';
+import { getEventImageUrl } from '../../lib/images';
 import { ROUTES } from '../../config/routes';
 
 function FeaturedCard({ event, index = 0, large = false }) {
   const navigate = useNavigate();
   const isFree = Number(event.ticketPrice) === 0;
+  const imageUrl = getEventImageUrl(event);
   const gradients = [
     'linear-gradient(135deg,#0B3D2E,#128C6B)',
     'linear-gradient(135deg,#0F7A75,#0B3D2E)',
@@ -21,13 +23,12 @@ function FeaturedCard({ event, index = 0, large = false }) {
         cursor: 'pointer',
         height: large ? '100%' : '100%',
         minHeight: large ? 480 : 220,
-        background: event.img ? 'none' : gradients[index % 3],
+        background: imageUrl ? 'none' : gradients[index % 3],
       }}
     >
-      {/* Full-bleed image */}
-      {event.img && (
+      {imageUrl && (
         <img
-          src={event.img}
+          src={imageUrl}
           alt={event.title}
           loading="lazy"
           style={{

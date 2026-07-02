@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/layout/Footer";
+import EventDetailModal from "../../components/event/EventDetailModal";
 import { getOrganizerEvents, verifyTicket } from "../../lib/api";
 import QrScanner from "../../components/ui/QrScanner";
 import { ROUTES } from "../../config/routes";
@@ -32,6 +33,7 @@ export default function OrganizerDashboard() {
   const [qrInput,    setQrInput]    = useState("");
   const [scanResult, setScanResult] = useState(null);
   const [scanning,   setScanning]   = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
     getOrganizerEvents()
@@ -134,6 +136,9 @@ export default function OrganizerDashboard() {
                       })()}
                     </div>
                     <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                      <button onClick={() => setSelectedEvent(ev)} style={btnSm("transparent", "#0B3D2E")}>
+                        View
+                      </button>
                       <button onClick={() => navigate(ROUTES.ORGANIZER_EDIT(ev.id))} style={btnSm("transparent", "#128C6B")}>
                         Edit
                       </button>
@@ -181,6 +186,24 @@ export default function OrganizerDashboard() {
           </div>
         </div>
       </div>
+
+      <EventDetailModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        actions={selectedEvent && (
+          <>
+            <button onClick={() => { navigate(ROUTES.ORGANIZER_EDIT(selectedEvent.id)); setSelectedEvent(null); }}
+              style={{ padding: "8px 16px", borderRadius: 6, border: "1px solid #128C6B", background: "#fff", color: "#128C6B", cursor: "pointer", fontWeight: 600, fontSize: 13, fontFamily: "inherit" }}>
+              Edit Event
+            </button>
+            <button onClick={() => { navigate(ROUTES.ORGANIZER_ATTENDEES(selectedEvent.id)); setSelectedEvent(null); }}
+              style={{ padding: "8px 16px", borderRadius: 6, border: "none", background: "#0B3D2E", color: "#fff", cursor: "pointer", fontWeight: 600, fontSize: 13, fontFamily: "inherit" }}>
+              View Attendees
+            </button>
+          </>
+        )}
+      />
+
       <Footer />
     </div>
   );

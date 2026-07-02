@@ -4,6 +4,7 @@ export const ROUTES = {
   EVENT:     (id) => `/events/${id}`,
   LOGIN:     '/login',
   SIGNUP:    '/signup',
+  HELP:      '/help',
 
   DASHBOARD: '/dashboard',
   TICKETS:   '/tickets',

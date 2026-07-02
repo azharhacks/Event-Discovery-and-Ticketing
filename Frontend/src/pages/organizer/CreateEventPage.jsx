@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/layout/Footer";
 import { getCategories, createEvent } from "../../lib/api";
+import BannerUpload from "../../components/event/BannerUpload";
 import { ROUTES } from "../../config/routes";
 
 export default function CreateEventPage() {
@@ -152,16 +153,10 @@ export default function CreateEventPage() {
                       <input name="capacity" type="number" min="1" style={field} placeholder="e.g. 500" value={form.capacity} onChange={handleChange} required />
                     </div>
                   </div>
-                  <div>
-                    <label style={label}>Banner Image URL</label>
-                    <input name="bannerUrl" type="url" style={field} placeholder="https://..." value={form.bannerUrl} onChange={handleChange} />
-                    {form.bannerUrl && (
-                      <div style={{ marginTop: 12, borderRadius: 8, overflow: "hidden", border: "1px solid #E3DFD2" }}>
-                        <img src={form.bannerUrl} alt="Banner preview" style={{ width: "100%", height: 180, objectFit: "cover", display: "block" }}
-                          onError={(e) => (e.target.style.display = "none")} />
-                      </div>
-                    )}
-                  </div>
+                  <BannerUpload
+                    value={form.bannerUrl}
+                    onChange={(url) => setForm((f) => ({ ...f, bannerUrl: url }))}
+                  />
                 </div>
               </div>
 

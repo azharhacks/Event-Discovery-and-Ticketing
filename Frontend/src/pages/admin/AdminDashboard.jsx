@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Navbar from "../../components/layout/Navbar";
 import Footer from "../../components/layout/Footer";
+import EventDetailModal from "../../components/event/EventDetailModal";
 import {
   getAdminEvents,
   getAllUsers,
@@ -62,6 +63,7 @@ export default function AdminDashboard() {
   const [userFilter,    setUserFilter]    = useState("ALL");
   const [report,        setReport]        = useState(null);
   const [reportLoading, setReportLoading] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   const loadData = async () => {
     try {
@@ -231,6 +233,10 @@ export default function AdminDashboard() {
                         {ev.status}
                       </span>
                       <span style={{ fontSize: 14, fontWeight: 700, color: "#128C6B", minWidth: 80, textAlign: "right" }}>{fmtPrice(ev.ticketPrice)}</span>
+                      <button onClick={() => setSelectedEvent(ev)}
+                        style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid #E3DFD2", background: "#fff", color: "#0B3D2E", cursor: "pointer", fontWeight: 600, fontSize: 12, fontFamily: "inherit" }}>
+                        View
+                      </button>
                       {ev.status === "PENDING" && (
                         <div style={{ display: "flex", gap: 8 }}>
                           <button onClick={() => handleStatusChange(ev.id, "APPROVED")} disabled={updating === ev.id}
@@ -457,6 +463,28 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      <EventDetailModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        actions={selectedEvent && (
+          <>
+            {selectedEvent.status === "PENDING" && (
+              <>
+                <button onClick={() => { handleStatusChange(selectedEvent.id, "APPROVED"); setSelectedEvent(null); }} disabled={updating === selectedEvent.id}
+                  style={{ padding: "8px 16px", borderRadius: 6, border: "none", background: "#128C6B", color: "#fff", cursor: "pointer", fontWeight: 600, fontSize: 13, fontFamily: "inherit" }}>
+                  Approve Event
+                </button>
+                <button onClick={() => { handleStatusChange(selectedEvent.id, "REJECTED"); setSelectedEvent(null); }} disabled={updating === selectedEvent.id}
+                  style={{ padding: "8px 16px", borderRadius: 6, border: "none", background: "#ef4444", color: "#fff", cursor: "pointer", fontWeight: 600, fontSize: 13, fontFamily: "inherit" }}>
+                  Reject Event
+                </button>
+              </>
+            )}
+          </>
+        )}
+      />
+
       <Footer />
     </div>
   );

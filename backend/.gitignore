@@ -18,3 +18,7 @@ Thumbs.db
 # Build output
 dist/
 build/
+
+# Uploaded event banners (keep folder)
+uploads/banners/*
+!uploads/banners/.gitkeep
