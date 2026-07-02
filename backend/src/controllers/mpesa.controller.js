@@ -59,11 +59,19 @@ const pay = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('[pay]', error?.response?.data || error.message);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to initiate payment. Please try again.',
-    });
+    const daraja = error?.response?.data;
+    console.error('[pay]', daraja || error.message);
+
+    let message = 'Failed to initiate payment. Please try again.';
+    if (daraja?.errorMessage?.includes('Invalid CallBackURL')) {
+      message = 'M-Pesa callback URL is invalid. Set BASE_URL in .env to your public HTTPS URL (e.g. ngrok), then restart the backend.';
+    } else if (daraja?.errorMessage) {
+      message = daraja.errorMessage;
+    } else if (error.message?.includes('not configured')) {
+      message = error.message;
+    }
+
+    return res.status(500).json({ success: false, message });
   }
 };
 

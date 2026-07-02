@@ -35,11 +35,25 @@ const getAccessToken = async () => {
 // @param {string} orderId      – Used as AccountReference
 // ─────────────────────────────────────────────
 const initiateSTKPush = async (phone, amount, orderId) => {
+  const baseUrl = (process.env.BASE_URL || '').replace(/\/$/, '');
+  if (!baseUrl || baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')) {
+    const err = new Error(
+      'BASE_URL must be a public HTTPS URL (e.g. https://xxxx.ngrok-free.app). localhost is rejected by M-Pesa.'
+    );
+    err.code = 'INVALID_BASE_URL';
+    throw err;
+  }
+  if (!baseUrl.startsWith('https://')) {
+    const err = new Error('BASE_URL must use HTTPS for M-Pesa callbacks.');
+    err.code = 'INVALID_BASE_URL';
+    throw err;
+  }
+
   const accessToken = await getAccessToken();
 
   const shortcode = process.env.MPESA_SHORTCODE;
   const passkey = process.env.MPESA_PASSKEY;
-  const callbackUrl = `${process.env.BASE_URL}/api/mpesa/callback`;
+  const callbackUrl = `${baseUrl}/api/mpesa/callback`;
 
   // Generate the timestamp in format YYYYMMDDHHmmss
   const now = new Date();

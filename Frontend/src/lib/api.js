@@ -67,3 +67,15 @@ export const verifyTicket = (qrToken) => request('/tickets/verify', { method: 'P
 // Profile
 export const getUserProfile = () => request('/users/profile');
 export const updateUserProfile = (body) => request('/users/profile', { method: 'PUT', body: JSON.stringify(body) });
+
+export const uploadBanner = async (file) => {
+  const token = getToken();
+  const formData = new FormData();
+  formData.append('banner', file);
+  const headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(`${BASE_URL}/uploads/banner`, { method: 'POST', headers, body: formData });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw { status: res.status, message: data.message || 'Upload failed' };
+  return data;
+};

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { formatKES, formatDate } from '../../lib/utils';
+import { getEventImageUrl } from '../../lib/images';
 import { ROUTES } from '../../config/routes';
 
 const FALLBACKS = [
@@ -12,6 +13,7 @@ const FALLBACKS = [
 export default function EventCardFull({ event, index = 0 }) {
   const navigate = useNavigate();
   const isFree = Number(event.ticketPrice) === 0;
+  const imageUrl = getEventImageUrl(event);
 
   return (
     <div
@@ -22,12 +24,12 @@ export default function EventCardFull({ event, index = 0 }) {
         overflow: 'hidden',
         cursor: 'pointer',
         height: 300,
-        background: event.img ? 'none' : FALLBACKS[index % FALLBACKS.length],
+        background: imageUrl ? 'none' : FALLBACKS[index % FALLBACKS.length],
       }}
     >
-      {event.img && (
+      {imageUrl && (
         <img
-          src={event.img}
+          src={imageUrl}
           alt={event.title}
           loading="lazy"
           style={{

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { formatKES, formatDate } from '../../lib/utils';
+import { getEventImageUrl } from '../../lib/images';
 import { ROUTES } from '../../config/routes';
 
 export default function EventCard({ event, index = 0 }) {
@@ -9,6 +10,7 @@ export default function EventCard({ event, index = 0 }) {
   const badgeText  = event.badge || (isFree ? 'FREE' : 'FEATURED');
   const badgeClass = isFree ? 'badge-free' : 'badge-featured';
   const meta     = `${formatDate(event.eventDate)} · ${event.venue}`;
+  const imageUrl = getEventImageUrl(event);
 
   return (
     <div
@@ -17,9 +19,9 @@ export default function EventCard({ event, index = 0 }) {
       onClick={() => navigate(ROUTES.EVENT(event.id))}
     >
       <div className="event-card-img">
-        {event.img ? (
+        {imageUrl ? (
           <img
-            src={event.img}
+            src={imageUrl}
             alt={event.title}
             loading="lazy"
             onError={(e) => { e.target.parentElement.style.background = 'var(--light)'; }}

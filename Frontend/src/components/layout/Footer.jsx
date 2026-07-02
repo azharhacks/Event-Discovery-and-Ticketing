@@ -24,9 +24,9 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Quick Links</h4>
             <ul>
-              <li><a href="#">How it Works</a></li>
-              <li><a href="#">For Organizers</a></li>
-              <li><a href="#">Help Center</a></li>
+              <li><Link to={ROUTES.HELP}>How it Works</Link></li>
+              <li><Link to={`${ROUTES.HOME}#organizers`}>For Organizers</Link></li>
+              <li><Link to={ROUTES.HELP}>Help Center</Link></li>
             </ul>
           </div>
           <div className="footer-col">

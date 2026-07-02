@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
-import { createOrder, getOrderStatus, initiateMpesaPay, getCheckoutOptions, confirmFreeOrder, demoPayOrder } from '../../lib/api';
+import { createOrder, getOrderStatus, initiateMpesaPay, confirmFreeOrder } from '../../lib/api';
 import { ROUTES } from '../../config/routes';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -36,16 +36,9 @@ export default function CheckoutPage() {
   const [paymentStatus,  setPaymentStatus]  = useState('idle'); // idle | paying | polling | success | failed
   const [paymentMessage, setPaymentMessage] = useState('');
   const [error,          setError]          = useState(null);
-  const [demoPayments,   setDemoPayments]   = useState(false);
 
   const pollRef = useRef(null);
   const isFreeOrder = order && Number(order.totalAmount) === 0;
-
-  useEffect(() => {
-    getCheckoutOptions()
-      .then((res) => setDemoPayments(!!res.data?.demoPayments))
-      .catch(() => setDemoPayments(true));
-  }, []);
 
   useEffect(() => {
     if (!ticketId || !quantity) {
@@ -119,20 +112,6 @@ export default function CheckoutPage() {
       setPaymentStatus('success');
     } catch (err) {
       setPaymentMessage(err.message || 'Could not confirm free ticket.');
-    } finally {
-      setCreating(false);
-    }
-  };
-
-  const handleDemoPay = async () => {
-    if (!order) return;
-    setCreating(true);
-    setPaymentMessage('');
-    try {
-      await demoPayOrder(order.id);
-      setPaymentStatus('success');
-    } catch (err) {
-      setPaymentMessage(err.message || 'Demo payment failed.');
     } finally {
       setCreating(false);
     }
@@ -349,37 +328,6 @@ export default function CheckoutPage() {
                     >
                       {creating ? 'Processing...' : `Pay ${fmtPrice(order.totalAmount)} via M-Pesa`}
                     </button>
-
-                    {demoPayments && (
-                      <>
-                        <div style={{ textAlign: 'center', margin: '16px 0', color: '#94a3b8', fontSize: 12, fontWeight: 600 }}>
-                          OR (for demo / testing)
-                        </div>
-                        <button
-                          type="button"
-                          onClick={handleDemoPay}
-                          disabled={creating}
-                          style={{
-                            width: '100%',
-                            padding: '12px',
-                            background: '#fff',
-                            color: '#2563eb',
-                            border: '2px solid #2563eb',
-                            borderRadius: 8,
-                            fontWeight: 700,
-                            fontSize: 14,
-                            cursor: 'pointer',
-                            fontFamily: 'inherit',
-                            opacity: creating ? 0.6 : 1,
-                          }}
-                        >
-                          {creating ? 'Processing...' : 'Simulate Payment (Demo)'}
-                        </button>
-                        <p style={{ fontSize: 11, color: '#94a3b8', marginTop: 10, textAlign: 'center' }}>
-                          Use this when M-Pesa sandbox is not configured
-                        </p>
-                      </>
-                    )}
                   </form>
                 )}
 

@@ -30,8 +30,7 @@ export default function Navbar() {
 
         <div className="nav-links">
           <Link to={ROUTES.HOME}   className="nav-link">Events</Link>
-          <a href="#organizers"     className="nav-link">Organizers</a>
-          <a href="#help"           className="nav-link">Help</a>
+          <Link to={ROUTES.HELP}   className="nav-link">Help</Link>
         </div>
 
         <div className="nav-search">

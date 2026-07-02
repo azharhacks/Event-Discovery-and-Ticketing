@@ -5,7 +5,7 @@ import Footer from "../../components/layout/Footer";
 import QrDisplay from "../../components/ui/QrDisplay";
 import { getMyTickets } from "../../lib/api";
 import { ROUTES } from "../../config/routes";
-import QRCode from "qrcode";
+import { downloadTicketImage } from "../../utils/ticketDownload";
 
 export default function MyTicketsPage() {
   const navigate = useNavigate();
@@ -20,16 +20,11 @@ export default function MyTicketsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleDownload = async (qrPayload, eventTitle) => {
-    if (!qrPayload) return;
+  const handleDownload = async (order) => {
     try {
-      const dataUrl = await QRCode.toDataURL(qrPayload, { width: 400, margin: 2 });
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = `hafla-ticket-${(eventTitle || 'qr').replace(/\s+/g, '-').toLowerCase()}.png`;
-      link.click();
+      await downloadTicketImage(order);
     } catch {
-      alert('Could not download QR code.');
+      alert('Could not download ticket.');
     }
   };
 
@@ -118,10 +113,10 @@ export default function MyTicketsPage() {
                 </div>
                 <div style={{ marginTop: "12px" }}>
                   <button
-                    onClick={() => handleDownload(activeTicket.qrPayload, activeTicket.ticket?.event?.title)}
+                    onClick={() => handleDownload(activeTicket)}
                     style={{ padding: "8px 20px", borderRadius: "8px", border: "1.5px solid var(--border)", background: "#fff", color: "var(--primary)", fontWeight: 600, fontSize: "13px", cursor: "pointer", fontFamily: "inherit" }}
                   >
-                    ↓ Download QR Code
+                    ↓ Download Ticket
                   </button>
                 </div>
               </div>
